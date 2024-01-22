@@ -14,7 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DashboardController extends Controller
 {
-    public function indexPage ()
+    public function indexPage()
     {
         $user = Auth::user();
         $url = config('shdactyl.pterodactyl.url');
@@ -33,19 +33,11 @@ class DashboardController extends Controller
     {
         $url = config('shdactyl.pterodactyl.url');
         $auth = config('shdactyl.pterodactyl.api_key');
-        $res = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => $auth,
-        ])->get($url . '/api/application/nodes');
-        $nodes = [];
-        foreach ($res['data'] as $node) {
-            $nodes[] = $node['attributes']['name'];
-        }
-
+        $nodes = config('shdactyl.nodes');
 
         return Inertia::render('Server/Create', [
             'nodes' => $nodes
-            ]);
+        ]);
     }
     public function resourceStorePage()
     {
@@ -61,12 +53,12 @@ class DashboardController extends Controller
             'Accept' => 'application/json',
             'Authorization' => $auth,
         ])->patch($url . '/api/application/users/' . $user->panel_id, [
-            'email' => $user->email,
-            'username' => $user->discord_id,
-            'first_name' => $user->name,
-            'last_name' => $user->database_id,
-            'password' => $password,
-        ]);
+                    'email' => $user->email,
+                    'username' => $user->discord_id,
+                    'first_name' => $user->name,
+                    'last_name' => $user->database_id,
+                    'password' => $password,
+                ]);
         $user->password = bcrypt(request($password));
         $user->save();
         return redirect('/dashboard')->with('success', '新的密碼：' . $password);
@@ -75,6 +67,7 @@ class DashboardController extends Controller
 
     public function serverCreation(Request $request)
     {
+        dd($request);
         $request->validate([
             'name' => ['required', 'max:50'],
             'last_name' => ['required', 'max:50'],

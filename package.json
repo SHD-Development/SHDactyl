@@ -38,6 +38,7 @@
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.3",
     "react-spring": "^9.7.3",
     "sweetalert2": "^11.10.1",
     "sweetalert2-react-content": "^5.0.7",
@@ -50,6 +51,9 @@
     "tabWidth": 2,
     "trailingComma": "all",
     "printWidth": 80,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "plugins": [
+      "@prettier/plugin-php"
+    ]
   }
 }

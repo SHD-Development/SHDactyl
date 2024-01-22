@@ -1,0 +1,31 @@
+{
+    "name": "owenliu0924/oauth",
+    "description": "",
+    "authors": [
+        {
+            "name": "Owen Liu",
+            "email": "owenliu0924useful@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\OAuth\\": "",
+            "Modules\\OAuth\\App\\": "app/",
+            "Modules\\OAuth\\Database\\Factories\\": "database/factories/",
+            "Modules\\OAuth\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\OAuth\\Tests\\": "tests/"
+        }
+    }
+}

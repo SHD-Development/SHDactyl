@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/core';
-import {Link, Head, usePage} from '@inertiajs/react';
+import { Link, Head, usePage } from '@inertiajs/react';
 import classNames from 'classnames';
 import React, { PropsWithChildren, useState } from 'react';
 import useRoute from '@/Hooks/useRoute';
@@ -11,7 +11,7 @@ import DropdownLink from '@/Components/DropdownLink';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Team } from '@/types';
-import {ThemeSwitcher} from "@/Components/ThemeSwitcher";
+import { ThemeSwitcher } from '@/Components/ThemeSwitcher';
 import Swal from 'sweetalert2';
 
 interface Props {
@@ -45,21 +45,59 @@ export default function AppLayout({
   function logout(e: React.FormEvent) {
     e.preventDefault();
     const res = router.post(route('logout'));
-      if (res.data.success) {
-          Swal.fire({
-              title: '登出成功'
-          });
-      }
-
   }
-    const { flash } = usePage().props
-    if (flash.success) {
-        Swal.fire({
-            title: "成功啦！",
-            text: flash.success,
-            icon: "success"
-        });
-    }
+  interface PageProps {
+    flash?: {
+      success?: string;
+      error?: string;
+      warning?: string;
+      info?: string;
+      question?: string;
+    };
+  }
+
+  const { flash } = usePage().props as PageProps;
+
+  if (flash?.success) {
+    Swal.fire({
+      title: '成功啦！',
+      text: flash.success,
+      icon: 'success',
+    });
+    flash.success = undefined;
+  }
+  if (flash?.error) {
+    Swal.fire({
+      title: '哎呀，出錯了！',
+      text: flash.error,
+      icon: 'error',
+    });
+    flash.error = undefined;
+  }
+  if (flash?.warning) {
+    Swal.fire({
+      title: '要注意！',
+      text: flash.warning,
+      icon: 'warning',
+    });
+    flash.warning = undefined;
+  }
+  if (flash?.info) {
+    Swal.fire({
+      title: '小提醒！',
+      text: flash.info,
+      icon: 'info',
+    });
+    flash.info = undefined;
+  }
+  if (flash?.question) {
+    Swal.fire({
+      title: '不太清楚！',
+      text: flash.question,
+      icon: 'question',
+    });
+    flash.question = undefined;
+  }
   return (
     <div>
       <Head title={title} />
@@ -81,24 +119,24 @@ export default function AppLayout({
 
                 {/* <!-- Navigation Links --> */}
                 <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <NavLink
-                        href={route('dashboard')}
-                        active={route().current('dashboard')}
-                    ><i className="fa-solid fa-house-chimney"></i>&nbsp;
-                        主頁
-                    </NavLink>
-                    <NavLink
-                        href={route('dashboard.server.create')}
-                        active={route().current('dashboard.server.create')}
-                    ><i className="fa-solid fa-circle-plus"></i>&nbsp;
-                        新建伺服器
-                    </NavLink>
-                    <NavLink
-                        href={route('dashboard.resource.store')}
-                        active={route().current('dashboard.resource.store')}
-                    ><i className="fa-solid fa-store"></i>&nbsp;
-                        資源商店
-                    </NavLink>
+                  <NavLink
+                    href={route('dashboard')}
+                    active={route().current('dashboard')}
+                  >
+                    <i className="fa-solid fa-house-chimney"></i>&nbsp; 主頁
+                  </NavLink>
+                  <NavLink
+                    href={route('dashboard.server.create')}
+                    active={route().current('dashboard.server.create')}
+                  >
+                    <i className="fa-solid fa-circle-plus"></i>&nbsp; 新建伺服器
+                  </NavLink>
+                  <NavLink
+                    href={route('dashboard.resource.store')}
+                    active={route().current('dashboard.resource.store')}
+                  >
+                    <i className="fa-solid fa-store"></i>&nbsp; 資源商店
+                  </NavLink>
                 </div>
               </div>
 
@@ -258,7 +296,7 @@ export default function AppLayout({
                     </form>
                   </Dropdown>
                 </div>
-                  <ThemeSwitcher />
+                <ThemeSwitcher />
               </div>
 
               {/* <!-- Hamburger --> */}

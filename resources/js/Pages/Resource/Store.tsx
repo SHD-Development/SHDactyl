@@ -7,7 +7,7 @@ import {Chip} from "@nextui-org/react";
 import {Button, ButtonGroup} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import {Checkbox} from "@nextui-org/react";
-import { router } from '@inertiajs/react';
+import {router, useForm} from '@inertiajs/react';
 import Swal from 'sweetalert2';
 import { usePage } from '@inertiajs/react';
 import {Input} from "@nextui-org/react";
@@ -17,7 +17,18 @@ import { animated, useSpring } from '@react-spring/web'
 import { useState } from 'react';
 export default function Store(props) {
     const [value, setValue] = useState("")
-
+    const form = useForm({
+        name: '',
+        cpu: '',
+        ram: '',
+        disk: '',
+        databases: '',
+        backups: '',
+    });
+    function onSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        form.post(route('resource.store.purchase'));
+    }
 
     return (
         <AppLayout

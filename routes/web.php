@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +45,5 @@ Route::middleware([
 
 Route::get('/login/discord', [SocialController::class, 'redirectToDiscord'])->name('login.discord');
 Route::get('/login/discord/callback', [SocialController::class, 'handleDiscordCallback'])->name('login.discord.callback');
+
+Route::get('/admin/modules', [AdminController::class, 'modulesPage'])->name('modules.dashboard');

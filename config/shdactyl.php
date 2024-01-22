@@ -18,4 +18,9 @@ return [
             'register' => ''
         ],
     ],
+    'nodes' => [
+        'Node-TW01' => 1,
+        'Node-TW02' => 3,
+        'Node-TW03' => 5
+    ]
 ];

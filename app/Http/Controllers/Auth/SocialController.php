@@ -44,7 +44,7 @@ class SocialController extends Controller
             DiscordAlert::to('login')->message("", [
                 [
                     'title' => '[登入請求]',
-                    'description' => '帳號：<@' . $existingUser->discord_id . '> ('. $existingUser->discord_id . ')\n' .
+                    'description' => '帳號：<@' . $existingUser->discord_id . '> (' . $existingUser->discord_id . ')\n' .
                         '電子郵件：' . $existingUser->email .
                         '\nIP 紀錄：' . implode(', ', $ips),
                     'color' => '#03cafc',
@@ -82,22 +82,22 @@ class SocialController extends Controller
                     'Accept' => 'application/json',
                     'Authorization' => $auth,
                 ])->patch($url . '/api/application/users/' . Arr::get($data, 'data.0.attributes.id'), [
-                    'email' => $user->email,
-                    'username' => $user->id,
-                    'first_name' => $user->name,
-                    'last_name' => $database_id,
-                    'password' => $password,
-                ]);
+                            'email' => $user->email,
+                            'username' => $user->id,
+                            'first_name' => $user->name,
+                            'last_name' => $database_id,
+                            'password' => $password,
+                        ]);
             } else {
                 $res = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Authorization' => $auth,
                 ])->post($url . '/api/application/users', [
-                    'email' => $user->email,
-                    'username' => $user->id,
-                    'first_name' => $user->name,
-                    'last_name' => $database_id,
-                ]);
+                            'email' => $user->email,
+                            'username' => $user->id,
+                            'first_name' => $user->name,
+                            'last_name' => $database_id,
+                        ]);
                 $newUser->panel_id = Arr::get(json_decode($res, true), 'attributes.id');
             }
             $newUser->save();
@@ -117,7 +117,7 @@ class SocialController extends Controller
             DiscordAlert::to('register')->message("", [
                 [
                     'title' => '[用戶註冊]',
-                    'description' => '帳號：<@' . $newUser->discord_id . '> ('. $newUser->discord_id . ')\n' .
+                    'description' => '帳號：<@' . $newUser->discord_id . '> (' . $newUser->discord_id . ')\n' .
                         '電子郵件：' . $newUser->email .
                         '\nIP 紀錄：' . implode(', ', $ips) . '\n面板 ID：' . $newUser->panel_id . '\n資料庫 ID：' . $newUser->database_id,
                     'color' => '#03cafc',
