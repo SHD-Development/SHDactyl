@@ -43,7 +43,7 @@ export default function Create(props: any) {
     databases: NaN,
     backups: NaN,
   });
-
+  const { errors: any } = usePage().props;
   function submit(e: any) {
     e.preventDefault();
     post('/dashboard/server/create');
@@ -88,6 +88,9 @@ export default function Create(props: any) {
                       isRequired
                     />
                   </CardBody>
+                  {errors.name && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.name}</p>
+                  )}
                   <Divider />
                   <CardBody>
                     <Select
@@ -106,6 +109,9 @@ export default function Create(props: any) {
                       ))}
                     </Select>
                   </CardBody>
+                  {errors.node && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.node}</p>
+                  )}
                   <Divider />
                   <CardBody>
                     <Input
@@ -123,6 +129,9 @@ export default function Create(props: any) {
                       isRequired
                     />
                   </CardBody>
+                  {errors.cpu && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.cpu}</p>
+                  )}
                   <Divider />
                   <CardBody>
                     <Input
@@ -142,6 +151,9 @@ export default function Create(props: any) {
                       isRequired
                     />
                   </CardBody>
+                  {errors.ram && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.ram}</p>
+                  )}
                   <Divider />
                   <CardBody>
                     <Input
@@ -161,6 +173,9 @@ export default function Create(props: any) {
                       isRequired
                     />
                   </CardBody>
+                  {errors.disk && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.disk}</p>
+                  )}
                   <Divider />
                   <CardBody>
                     <Input
@@ -182,6 +197,9 @@ export default function Create(props: any) {
                       isRequired
                     />
                   </CardBody>
+                  {errors.databases && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.databases}</p>
+                  )}
                   <Divider />
                   <CardBody>
                     <Input
@@ -201,6 +219,9 @@ export default function Create(props: any) {
                       isRequired
                     />
                   </CardBody>
+                  {errors.backups && (
+                    <p className="text-red-600 mx-2 mb-3">{errors.backups}</p>
+                  )}
                   <Divider />
                   <CardFooter className="flex flex-col justify-center">
                     {/*<Chip color="secondary" size="lg">您的伺服器需要在 年 月 日 續約</Chip>*/}

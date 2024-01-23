@@ -12,15 +12,29 @@ return [
         'databases' => 0,
         'backups' => 0,
     ],
-    'channels' => [
-        'logs' => [
-            'login' => '1185937923183476917',
-            'register' => ''
-        ],
-    ],
     'nodes' => [
         'Node-TW01' => 1,
         'Node-TW02' => 3,
         'Node-TW03' => 5
+    ],
+    'eggs' => [
+        'id' => [
+            'name' => 'egg name',
+            'docker_image' => 'quay.io/xxxxxx',
+            'startup' => 'java',
+            'environment' => [
+                'ENV_VERSION' => 'latest',
+                'SERVER_FILE' => 'server.jar'
+            ]
+        ],
+        'id2' => [
+            'name' => 'egg2 name',
+            'docker_image' => 'quay.io/xxxxxx',
+            'startup' => 'java2',
+            'environment' => [
+                'ENV2_VERSION' => 'latest',
+                'SERVER2_FILE' => 'server.jar'
+            ]
+        ]
     ]
 ];

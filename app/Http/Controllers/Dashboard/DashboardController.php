@@ -67,11 +67,26 @@ class DashboardController extends Controller
 
     public function serverCreation(Request $request)
     {
-        dd($request);
-        $request->validate([
-            'name' => ['required', 'max:50'],
-            'last_name' => ['required', 'max:50'],
-            'email' => ['required', 'max:50', 'email'],
+        $user = Auth::user();
+        $data = $request->validate([
+            'name' => 'required|max:30',
+            'node' => 'required|numeric|integer',
+            'cpu' => 'required|numeric|integer|min:5|max:400',
+            'ram' => 'required|numeric|integer|min:32|max:8192',
+            'disk' => 'required|numeric|integer|min:64|max:20480',
+            'databases' => 'required|numeric|integer|min:0|max:20',
+            'backups' => 'required|numeric|integer|min:0|max:30',
         ]);
+        $url = config('shdactyl.pterodactyl.url');
+        $auth = config('shdactyl.pterodactyl.api_key');
+        $res = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => $auth,
+        ])->post($url . '/api/application/servers', [
+                    'name' => $data->name,
+                    'user' => $user->panel_id,
+                    'egg'
+                ]);
+        return redirect('/dashboard/server/create')->with('success', 'yes');
     }
 }
