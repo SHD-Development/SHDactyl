@@ -10,7 +10,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Arr;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use App\Models\Coupon;
 
 class DashboardController extends Controller
 {
@@ -83,10 +83,24 @@ class DashboardController extends Controller
             'Accept' => 'application/json',
             'Authorization' => $auth,
         ])->post($url . '/api/application/servers', [
-                    'name' => $data->name,
+                    'name' => $data['name'],
                     'user' => $user->panel_id,
-                    'egg'
                 ]);
         return redirect('/dashboard/server/create')->with('success', 'yes');
+    }
+    public function couponPage()
+    {
+        return Inertia::render('Resource/Coupon');
+    }
+    public function redeemCoupon(Request $request)
+    {
+        $user = Auth::user();
+        $coupon = $request['coupon'];
+        $realCoupon = Coupon::where('code', $coupon)->first();
+        if ($realCoupon) {
+            return redirect('/dashboard/resource/coupon')->with('success', 'yes');
+        } else {
+            return redirect('/dashboard/resource/coupon')->with('error', 'error');
+        }
     }
 }

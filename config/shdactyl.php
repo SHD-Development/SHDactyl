@@ -18,23 +18,46 @@ return [
         'Node-TW03' => 5
     ],
     'eggs' => [
-        'id' => [
-            'name' => 'egg name',
-            'docker_image' => 'quay.io/xxxxxx',
-            'startup' => 'java',
-            'environment' => [
-                'ENV_VERSION' => 'latest',
-                'SERVER_FILE' => 'server.jar'
+        'mcjava' => [
+            'id' => [
+                'name' => 'egg name',
+                'docker_image' => 'quay.io/xxxxxx',
+                'startup' => 'java',
+                'environment' => [
+                    'ENV_VERSION' => 'latest',
+                    'SERVER_FILE' => 'server.jar'
+                ]
+            ],
+            'id2' => [
+                'name' => 'egg2 name',
+                'docker_image' => 'quay.io/xxxxxx',
+                'startup' => 'java2',
+                'environment' => [
+                    'ENV2_VERSION' => 'latest',
+                    'SERVER2_FILE' => 'server.jar'
+                ]
             ]
         ],
-        'id2' => [
-            'name' => 'egg2 name',
-            'docker_image' => 'quay.io/xxxxxx',
-            'startup' => 'java2',
-            'environment' => [
-                'ENV2_VERSION' => 'latest',
-                'SERVER2_FILE' => 'server.jar'
+        'mcbedrock' => [
+            'id3' => [
+                'name' => 'egg3 name',
+                'docker_image' => 'quay.io/xxxxxx',
+                'startup' => 'bedrock1',
+                'environment' => [
+                    'ENV_VERSION' => 'latest',
+                    'SERVER_FILE' => 'server.bedrock'
+                ]
+            ],
+            'id4' => [
+                'name' => 'egg4 name',
+                'docker_image' => 'quay.io/xxxxxx',
+                'startup' => 'bedrock2',
+                'environment' => [
+                    'ENV2_VERSION' => 'latest',
+                    'SERVER2_FILE' => 'server.bedrock'
+                ]
             ]
         ]
+
     ]
 ];

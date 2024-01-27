@@ -46,7 +46,7 @@ export default function Create(props: any) {
   const { errors: any } = usePage().props;
   function submit(e: any) {
     e.preventDefault();
-    post('/dashboard/server/create');
+    post('/server/create');
   }
 
   return (
