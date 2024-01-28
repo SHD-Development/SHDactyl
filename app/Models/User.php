@@ -24,6 +24,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(IpRecords::class);
     }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -33,6 +34,15 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'panel_id',
+        'database_id',
+        'avatar',
+        'cpu',
+        'ram',
+        'disk',
+        'databases',
+        'backups',
+        'ports',
         'coins',
         'discord_id',
     ];

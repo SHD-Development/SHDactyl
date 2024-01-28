@@ -97,7 +97,7 @@ export default function Dashboard(props: any) {
                   )}
                   <CardFooter className="flex flex-col justify-center">
                     <Button type="submit" color="success">
-                      創建
+                      兌換
                     </Button>
                   </CardFooter>
                 </form>

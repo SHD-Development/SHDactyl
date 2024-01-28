@@ -5,12 +5,16 @@ return [
         'url' => env('PTERODACTYL_URL'),
         'api_key' => 'Bearer ' . env('PTERODACTYL_API_KEY'),
     ],
+    'webhook' => [
+        'icon_url' => 'https://cdn.discordapp.com/attachments/1120284155578691676/1185889959710838875/shd-cloud-logo.png'
+    ],
     'resources' => [
         'cpu' => 100,
         'ram' => 2048,
         'disk' => 4096,
         'databases' => 0,
         'backups' => 0,
+        'ports' => 0,
     ],
     'nodes' => [
         'Node-TW01' => 1,

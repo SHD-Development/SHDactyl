@@ -49,7 +49,7 @@ class SocialController extends Controller
                         '\nIP 紀錄：' . implode(', ', $ips),
                     'color' => '#03cafc',
                     'footer' => [
-                        'icon_url' => 'https://cdn.discordapp.com/attachments/1120284155578691676/1185889959710838875/shd-cloud-logo.png',
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
                         'text' => 'SHDactyl',
                     ],
                     'timestamp' => Carbon::now(),
@@ -68,6 +68,7 @@ class SocialController extends Controller
             $newUser->password = bcrypt(request($password));
             $database_id = Str::random(16);
             $newUser->database_id = $database_id;
+            $newUser->avatar = $user->avatar;
             $url = config('shdactyl.pterodactyl.url');
             $auth = config('shdactyl.pterodactyl.api_key');
             $res = Http::withHeaders([
@@ -122,7 +123,7 @@ class SocialController extends Controller
                         '\nIP 紀錄：' . implode(', ', $ips) . '\n面板 ID：' . $newUser->panel_id . '\n資料庫 ID：' . $newUser->database_id,
                     'color' => '#03cafc',
                     'footer' => [
-                        'icon_url' => 'https://cdn.discordapp.com/attachments/1120284155578691676/1185889959710838875/shd-cloud-logo.png',
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
                         'text' => 'SHDactyl',
                     ],
                     'timestamp' => Carbon::now(),

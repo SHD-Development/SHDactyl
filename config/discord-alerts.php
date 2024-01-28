@@ -7,6 +7,7 @@ return [
     'webhook_urls' => [
         'login' => env('WEBHOOK_LOGIN'),
         'register' => env('WEBHOOK_REGISTER'),
+        'coins' => env('WEBHOOK_COINS')
     ],
 
     /*

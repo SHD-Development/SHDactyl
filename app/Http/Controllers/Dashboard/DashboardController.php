@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Arr;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Coupon;
+use App\Models\ActionLog;
+use Spatie\DiscordAlerts\Facades\DiscordAlert;
+use Carbon\Carbon;
+use Laravel\Socialite\Facades\Socialite;
 
 class DashboardController extends Controller
 {
@@ -98,9 +102,52 @@ class DashboardController extends Controller
         $coupon = $request['coupon'];
         $realCoupon = Coupon::where('code', $coupon)->first();
         if ($realCoupon) {
-            return redirect('/dashboard/resource/coupon')->with('success', 'yes');
+            if (!($realCoupon->used_times >= $realCoupon->times)) {
+                $history = ActionLog::where('action_type', 'resource.coupon.redeem')
+                    ->where('user_id', $user->id)
+                    ->where('status', 'success')
+                    ->whereJsonContains('content->code', $realCoupon->code)->first();
+
+                if (!$history) {
+                    ActionLog::create([
+                        'action_type' => 'resource.coupon.redeem',
+                        'user_id' => $user->id,
+                        'content' => [
+                            'code' => $realCoupon->code,
+                        ],
+                        'status' => 'success'
+                    ]);
+                    DiscordAlert::to('coins')->message("", [
+                        [
+                            'title' => '[兌換代碼]',
+                            'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                                '代碼名稱：' . $realCoupon->name . '\n' . '代碼：`' . $realCoupon->code . '`\n' . '獲得代幣：$ ' . $realCoupon->coins . ' SDC\n' . '可用次數：' . $realCoupon->times . ' 次\n' . '已使用次數：' . $realCoupon->used_times . ' 次',
+                            'color' => '#03cafc',
+                            'footer' => [
+                                'icon_url' => config('shdactyl.webhook.icon_url'),
+                                'text' => 'SHDactyl',
+                            ],
+                            'timestamp' => Carbon::now(),
+                            'author' => [
+                                'name' => $user->name,
+                                'icon_url' => $user->avatar,
+                            ],
+                        ]
+                    ]);
+                    $user->increment('coins', $realCoupon->coins);
+                    $user->save();
+                    $realCoupon->used_times++;
+                    $realCoupon->save();
+                    return redirect('/dashboard/resource/coupon')->with('success', '成功兌換名為 "' . $realCoupon->name . '" 的代碼並獲得了 $ ' . $realCoupon->coins . ' SDC');
+
+                } else {
+                    return redirect('/dashboard/resource/coupon')->with('error', '你已經兌換過了這個名為 "' . $realCoupon->name . '" 的代碼');
+                }
+            } else {
+                return redirect('/dashboard/resource/coupon')->with('error', '這個名為 "' . $realCoupon->name . '" 的代碼已達使用次數上限');
+            }
         } else {
-            return redirect('/dashboard/resource/coupon')->with('error', 'error');
+            return redirect('/dashboard/resource/coupon')->with('error', '沒有這個代碼');
         }
     }
 }
