@@ -68,7 +68,7 @@ export default function Dashboard(props: any) {
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex justify-center flex-col py-5">
             <div className="flex justify-around px-5 flex-row flex-wrap">
-              <Card className="w-60 p-3">
+              <Card className="w-60 p-3 mt-3">
                 <CardHeader className="justify-between">
                   <div className="flex gap-5">
                     <div className="flex flex-col gap-1 items-start justify-center">
@@ -82,42 +82,42 @@ export default function Dashboard(props: any) {
                   <i className="fa-solid fa-coins fa-2xl"></i>
                 </CardHeader>
               </Card>
-              <Card className="w-60 p-3">
+              <Card className="w-60 p-3 mt-3">
                 <CardHeader className="justify-between">
                   <div className="flex gap-5">
                     <div className="flex flex-col gap-1 items-start justify-center">
                       <p className="text-tiny uppercase font-bold">處理器</p>
                       <small className="text-default-500">CPU</small>
                       <h3 className="font-bold text-large">
-                        0 / {props.auth.user.cpu} %
+                        {props.total.cpu} / {props.auth.user.cpu} %
                       </h3>
                     </div>
                   </div>
                   <i className="fa-solid fa-microchip fa-2xl"></i>
                 </CardHeader>
               </Card>
-              <Card className="w-60 p-3">
+              <Card className="w-60 p-3 mt-3">
                 <CardHeader className="justify-between">
                   <div className="flex gap-5">
                     <div className="flex flex-col gap-1 items-start justify-center">
                       <p className="text-tiny uppercase font-bold">記憶體</p>
                       <small className="text-default-500">Ram</small>
                       <h3 className="font-bold text-large">
-                        0 / {props.auth.user.ram} MB
+                        {props.total.ram} / {props.auth.user.ram} MB
                       </h3>
                     </div>
                   </div>
                   <i className="fa-solid fa-memory fa-2xl"></i>
                 </CardHeader>
               </Card>
-              <Card className="w-60 p-3">
+              <Card className="w-60 p-3 mt-3">
                 <CardHeader className="justify-between">
                   <div className="flex gap-5">
                     <div className="flex flex-col gap-1 items-start justify-center">
                       <p className="text-tiny uppercase font-bold">儲存空間</p>
                       <small className="text-default-500">Disk</small>
                       <h3 className="font-bold text-large">
-                        0 / {props.auth.user.disk} MB
+                        {props.total.disk} / {props.auth.user.disk} MB
                       </h3>
                     </div>
                   </div>
@@ -282,7 +282,7 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">CPU</small>
                             <h3 className="font-bold text-large">
-                              0 / {props.auth.user.cpu} %
+                              {props.total.cpu} / {props.auth.user.cpu} %
                             </h3>
                           </div>
                         </div>
@@ -298,7 +298,7 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">Ram</small>
                             <h3 className="font-bold text-large">
-                              0 / {props.auth.user.ram} MB
+                              {props.total.ram} / {props.auth.user.ram} MB
                             </h3>
                           </div>
                         </div>
@@ -314,7 +314,7 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">Disk</small>
                             <h3 className="font-bold text-large">
-                              0 / {props.auth.user.disk} MB
+                              {props.total.disk} / {props.auth.user.disk} MB
                             </h3>
                           </div>
                         </div>
@@ -332,7 +332,8 @@ export default function Dashboard(props: any) {
                               Databases
                             </small>
                             <h3 className="font-bold text-large">
-                              0 / {props.auth.user.databases} 個
+                              {props.total.databases} /{' '}
+                              {props.auth.user.databases} 個
                             </h3>
                           </div>
                         </div>
@@ -348,11 +349,28 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">Backups</small>
                             <h3 className="font-bold text-large">
-                              0 / {props.auth.user.backups} 個
+                              {props.total.backups} / {props.auth.user.backups}{' '}
+                              個
                             </h3>
                           </div>
                         </div>
                         <i className="fa-solid fa-cloud-arrow-up fa-2xl"></i>
+                      </CardHeader>
+                    </Card>
+                    <Card className="w-60 p-3 mt-3">
+                      <CardHeader className="justify-between">
+                        <div className="flex gap-5">
+                          <div className="flex flex-col gap-1 items-start justify-center">
+                            <p className="text-tiny uppercase font-bold">
+                              額外端口
+                            </p>
+                            <small className="text-default-500">Ports</small>
+                            <h3 className="font-bold text-large">
+                              {props.total.ports} / {props.auth.user.ports} 個
+                            </h3>
+                          </div>
+                        </div>
+                        <i className="fa-solid fa-network-wired fa-2xl"></i>
                       </CardHeader>
                     </Card>
                   </div>

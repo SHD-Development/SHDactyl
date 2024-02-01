@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('panel_id')->nullable();
+            $table->integer('panel_id')->nullable();
             $table->string('discord_id');
             $table->string('avatar');
             $table->decimal('coins', 10, 2)->default(0.00);

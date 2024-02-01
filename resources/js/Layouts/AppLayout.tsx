@@ -13,7 +13,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Team } from '@/types';
 import { ThemeSwitcher } from '@/Components/ThemeSwitcher';
 import Swal from 'sweetalert2';
-
+import { Tooltip } from '@nextui-org/react';
 interface Props {
   title: string;
   renderHeader?(): JSX.Element;
@@ -137,6 +137,12 @@ export default function AppLayout({
                   >
                     <i className="fa-solid fa-store"></i>&nbsp; 資源商店
                   </NavLink>
+                  <NavLink
+                    href={route('dashboard.resource.coupon')}
+                    active={route().current('dashboard.resource.coupon')}
+                  >
+                    <i className="fa-solid fa-ticket"></i>&nbsp; 兌換代碼
+                  </NavLink>
                 </div>
               </div>
 
@@ -233,7 +239,6 @@ export default function AppLayout({
                     </Dropdown>
                   ) : null}
                 </div>
-
                 {/* <!-- Settings Dropdown --> */}
                 <div className="ml-3 relative">
                   <Dropdown
@@ -274,13 +279,14 @@ export default function AppLayout({
                     }
                   >
                     {/* <!-- Account Management --> */}
-                    {/*<div className="block px-4 py-2 text-xs text-gray-400">*/}
-                    {/*  Manage Account*/}
-                    {/*</div>*/}
-
-                    {/*<DropdownLink href={route('profile.show')}>*/}
-                    {/*  Profile*/}
-                    {/*</DropdownLink>*/}
+                    <div className="block px-4 py-2 text-xs text-gray-400">
+                      資源
+                    </div>
+                    <DropdownLink>
+                      <i className="fa-solid fa-coins"></i>
+                      &nbsp;$&nbsp;{(page.props.auth.user as any).coins}
+                      &nbsp;SDC
+                    </DropdownLink>
 
                     {/*{page.props.jetstream.hasApiFeatures ? (*/}
                     {/*  <DropdownLink href={route('api-tokens.index')}>*/}
@@ -288,7 +294,7 @@ export default function AppLayout({
                     {/*  </DropdownLink>*/}
                     {/*) : null}*/}
 
-                    {/*<div className="border-t border-gray-200 dark:border-gray-600"></div>*/}
+                    <div className="border-t border-gray-200 dark:border-gray-600"></div>
 
                     {/* <!-- Authentication --> */}
                     <form onSubmit={logout}>
@@ -296,6 +302,7 @@ export default function AppLayout({
                     </form>
                   </Dropdown>
                 </div>
+                &nbsp;
                 <ThemeSwitcher />
               </div>
 
@@ -351,7 +358,25 @@ export default function AppLayout({
                 href={route('dashboard')}
                 active={route().current('dashboard')}
               >
-                Dashboard
+                <i className="fa-solid fa-house-chimney"></i>&nbsp; 主頁
+              </ResponsiveNavLink>
+              <ResponsiveNavLink
+                href={route('dashboard.server.create')}
+                active={route().current('dashboard.server.create')}
+              >
+                <i className="fa-solid fa-circle-plus"></i>&nbsp; 新建伺服器
+              </ResponsiveNavLink>
+              <ResponsiveNavLink
+                href={route('dashboard.resource.store')}
+                active={route().current('dashboard.resource.store')}
+              >
+                <i className="fa-solid fa-store"></i>&nbsp; 資源商店
+              </ResponsiveNavLink>
+              <ResponsiveNavLink
+                href={route('dashboard.resource.coupon')}
+                active={route().current('dashboard.resource.coupon')}
+              >
+                <i className="fa-solid fa-ticket"></i>&nbsp; 兌換代碼
               </ResponsiveNavLink>
             </div>
 
@@ -379,12 +404,12 @@ export default function AppLayout({
               </div>
 
               <div className="mt-3 space-y-1">
-                <ResponsiveNavLink
+                {/* <ResponsiveNavLink
                   href={route('profile.show')}
                   active={route().current('profile.show')}
                 >
                   Profile
-                </ResponsiveNavLink>
+                </ResponsiveNavLink> */}
 
                 {page.props.jetstream.hasApiFeatures ? (
                   <ResponsiveNavLink
@@ -394,10 +419,14 @@ export default function AppLayout({
                     API Tokens
                   </ResponsiveNavLink>
                 ) : null}
-
+                <ResponsiveNavLink as="button">
+                  <i className="fa-solid fa-coins"></i>
+                  &nbsp;$&nbsp;{(page.props.auth.user as any).coins}
+                  &nbsp;SDC
+                </ResponsiveNavLink>
                 {/* <!-- Authentication --> */}
                 <form method="POST" onSubmit={logout}>
-                  <ResponsiveNavLink as="button">Log Out</ResponsiveNavLink>
+                  <ResponsiveNavLink as="button">登出</ResponsiveNavLink>
                 </form>
 
                 {/* <!-- Team Management --> */}

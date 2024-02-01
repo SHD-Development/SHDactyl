@@ -64,11 +64,11 @@ export default function Dashboard(props: any) {
     >
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex justify-center items-center flex-col py-5">
+          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex justify-center items-center flex-col p-5">
             <div
               className="w-80
                 transition-all duration-100
-                ease-out hover:w-1/2"
+                ease-out hover:w-full"
             >
               <Card className="w-full">
                 <form onSubmit={submit}>

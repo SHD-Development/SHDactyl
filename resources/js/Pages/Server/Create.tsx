@@ -37,18 +37,21 @@ export default function Create(props: any) {
   const { data, setData, post, processing, errors } = useForm({
     name: '',
     node: '',
+    egg: NaN,
     cpu: NaN,
     ram: NaN,
     disk: NaN,
     databases: NaN,
     backups: NaN,
+    ports: NaN,
   });
   const { errors: any } = usePage().props;
   function submit(e: any) {
     e.preventDefault();
     post('/server/create');
   }
-
+  const [selectedEgg, setSelectedEgg] = useState('');
+  const eggs = props.eggs;
   return (
     <AppLayout
       title="Create Server"
@@ -89,7 +92,7 @@ export default function Create(props: any) {
                     />
                   </CardBody>
                   {errors.name && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.name}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.name}</p>
                   )}
                   <Divider />
                   <CardBody>
@@ -110,9 +113,32 @@ export default function Create(props: any) {
                     </Select>
                   </CardBody>
                   {errors.node && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.node}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.node}</p>
                   )}
                   <Divider />
+                  <CardBody>
+                    <Select
+                      label="類型"
+                      placeholder="Purpur 插件"
+                      isRequired
+                      onChange={e => {
+                        const selectedEgg: string = e.target.value;
+                        setData('egg', Number(selectedEgg));
+                      }}
+                    >
+                      {Object.entries(eggs).map(([category, items]) => (
+                        <SelectSection title={category} key={category}>
+                          {Object.entries(items as any).map(([id, item]) => (
+                            <SelectItem value={id} key={id}>
+                              {(item as any).name}
+                            </SelectItem>
+                          ))}
+                        </SelectSection>
+                      ))}
+                    </Select>
+                  </CardBody>
+                  <Divider />
+
                   <CardBody>
                     <Input
                       type="number"
@@ -130,7 +156,7 @@ export default function Create(props: any) {
                     />
                   </CardBody>
                   {errors.cpu && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.cpu}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.cpu}</p>
                   )}
                   <Divider />
                   <CardBody>
@@ -152,7 +178,7 @@ export default function Create(props: any) {
                     />
                   </CardBody>
                   {errors.ram && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.ram}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.ram}</p>
                   )}
                   <Divider />
                   <CardBody>
@@ -174,7 +200,7 @@ export default function Create(props: any) {
                     />
                   </CardBody>
                   {errors.disk && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.disk}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.disk}</p>
                   )}
                   <Divider />
                   <CardBody>
@@ -198,7 +224,7 @@ export default function Create(props: any) {
                     />
                   </CardBody>
                   {errors.databases && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.databases}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.databases}</p>
                   )}
                   <Divider />
                   <CardBody>
@@ -220,9 +246,32 @@ export default function Create(props: any) {
                     />
                   </CardBody>
                   {errors.backups && (
-                    <p className="text-red-600 mx-2 mb-3">{errors.backups}</p>
+                    <p className="text-red-600 mx-3 mb-3">{errors.backups}</p>
                   )}
                   <Divider />
+                  <CardBody>
+                    <Input
+                      type="number"
+                      label="額外端口"
+                      id="ports"
+                      value={String(data.ports)}
+                      onChange={e => setData('ports', Number(e.target.value))}
+                      placeholder="0"
+                      endContent={
+                        <div className="pointer-events-none flex items-center">
+                          <span className="text-default-400 text-small">
+                            個
+                          </span>
+                        </div>
+                      }
+                      isRequired
+                    />
+                  </CardBody>
+                  {errors.ports && (
+                    <p className="text-red-600 mx-3 mb-3">{errors.ports}</p>
+                  )}
+                  <Divider />
+
                   <CardFooter className="flex flex-col justify-center">
                     {/*<Chip color="secondary" size="lg">您的伺服器需要在 年 月 日 續約</Chip>*/}
                     {/*<br/>*/}

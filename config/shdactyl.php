@@ -21,6 +21,38 @@ return [
         'Node-TW02' => 3,
         'Node-TW03' => 5
     ],
+    'store' => [
+        'cpu' => [
+            'price' => 10.00,
+            'sale' => false,
+            'sale_percent' => 0.85,
+        ],
+        'ram' => [
+            'price' => 7.50,
+            'sale' => false,
+            'sale_percent' => 0.95,
+        ],
+        'disk' => [
+            'price' => 5.00,
+            'sale' => true,
+            'sale_percent' => 0.95,
+        ],
+        'databases' => [
+            'price' => 250.00,
+            'sale' => false,
+            'sale_percent' => 0.95,
+        ],
+        'backups' => [
+            'price' => 100.00,
+            'sale' => true,
+            'sale_percent' => 0.80,
+        ],
+        'ports' => [
+            'price' => 500.00,
+            'sale' => false,
+            'sale_percent' => 0.95,
+        ],
+    ],
     'eggs' => [
         'Minecraft JAVA' =>
             [
