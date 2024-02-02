@@ -57,6 +57,10 @@ class DashboardController extends Controller
             'store' => $store,
         ]);
     }
+    public function buyResource(Request $request, $resource)
+    {
+        dd($resource);
+    }
     public function resetPassword()
     {
         $user = Auth::user();

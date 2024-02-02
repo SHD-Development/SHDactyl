@@ -36,6 +36,7 @@ Route::middleware([
     Route::get('/dashboard/server/create', [DashboardController::class, 'serverCreationPage'])->name('dashboard.server.create');
     Route::post('/server/create', [DashboardController::class, 'serverCreation'])->name('server.create');
     Route::get('/dashboard/resource/store', [DashboardController::class, 'resourceStorePage'])->name('dashboard.resource.store');
+    Route::post('/resource/store/buy/{resource}', [DashboardController::class, 'buyResource'])->name('resource.store.buy');
     Route::get('/dashboard/resource/coupon', [DashboardController::class, 'couponPage'])->name('dashboard.resource.coupon');
     Route::post('/resource/coupon/redeem', [DashboardController::class, 'redeemCoupon'])->name('resource.coupon.redeem');
     Route::get('/test', function () {

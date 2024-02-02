@@ -34,21 +34,20 @@ import { useForm } from '@inertiajs/react';
 import { Select, SelectSection, SelectItem } from '@nextui-org/react';
 
 export default function Store(props: any) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [resource, setResource] = React.useState('');
+
+  const handleOpen = (resource: string) => {
+    setResource(resource);
+    onOpen();
+  };
   const { data, setData, post, processing, errors } = useForm({
-    name: '',
-    node: '',
-    egg: NaN,
-    cpu: NaN,
-    ram: NaN,
-    disk: NaN,
-    databases: NaN,
-    backups: NaN,
-    ports: NaN,
+    quantity: 0,
   });
   const { errors: any } = usePage().props;
-  function submit(e: any) {
+  function handleSubmit(e: any) {
     e.preventDefault();
-    post('/server/create');
+    post('/resource/store/buy/' + resource);
   }
   return (
     <AppLayout
@@ -81,10 +80,12 @@ export default function Store(props: any) {
               <div className="z-0 w-full h-full object-cover flex justify-center items-center">
                 <i className="fa-solid fa-microchip text-[20rem] rotate-[25deg] text-gray-700 drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"></i>
               </div>
+
               <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 %</p>
+
                     <p className="text-tiny text-green-400 font-semibold">
                       $ {props.store.cpu.price.toFixed(2)}
                       {props.store.cpu.sale ? (
@@ -107,6 +108,7 @@ export default function Store(props: any) {
                 <Button
                   radius="full"
                   size="sm"
+                  onPress={() => handleOpen('cpu')}
                   className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
                 >
                   <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
@@ -159,6 +161,7 @@ export default function Store(props: any) {
                 <Button
                   radius="full"
                   size="sm"
+                  onPress={() => handleOpen('ram')}
                   className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
                 >
                   <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
@@ -213,6 +216,170 @@ export default function Store(props: any) {
                 <Button
                   radius="full"
                   size="sm"
+                  onPress={() => handleOpen('disk')}
+                  className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
+                >
+                  <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
+                </Button>
+              </CardFooter>
+            </Card>
+            <Card
+              isFooterBlurred
+              className="w-80 h-72 col-span-12 sm:col-span-7 bg-gradient-to-br from-yellow-500 from-10% via-green-500 via-30% to-blue-500 to-90% my-3"
+            >
+              <CardHeader className="absolute z-10 top-1 flex-col items-start">
+                <p className="text-tiny text-white/60 uppercase font-bold">
+                  Databases
+                </p>
+                <h4 className="text-white/90 font-semibold text-xl">資料庫</h4>
+                {props.store.databases.sale ? (
+                  <Chip size="sm" color="danger" className="animate-pulse">
+                    <i className="fa-solid fa-sack-dollar"></i>&nbsp; 特價&nbsp;
+                    {props.store.databases.sale_percent * 100}%
+                  </Chip>
+                ) : null}
+              </CardHeader>
+              <div className="z-0 w-full h-full object-cover flex justify-center items-center">
+                <i className="fa-solid fa-database text-[20rem] rotate-[25deg] text-gray-700 drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"></i>
+              </div>
+              <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+                <div className="flex flex-grow gap-2 items-center">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-white/60">每購買 1 個</p>
+                    <p className="text-tiny text-green-400 font-semibold">
+                      $ {props.store.databases.price.toFixed(2)}
+                      {props.store.databases.sale ? (
+                        <p className="inline-block">
+                          &nbsp;
+                          <p className="text-red-600 inline-block">
+                            *&nbsp;
+                            {props.store.databases.sale_percent * 100}%
+                          </p>{' '}
+                          ={' '}
+                          {(
+                            props.store.databases.price *
+                            props.store.databases.sale_percent
+                          ).toFixed(2)}
+                        </p>
+                      ) : null}
+                      &nbsp;SDC
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  radius="full"
+                  size="sm"
+                  onPress={() => handleOpen('databases')}
+                  className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
+                >
+                  <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
+                </Button>
+              </CardFooter>
+            </Card>
+            <Card
+              isFooterBlurred
+              className="w-80 h-72 col-span-12 sm:col-span-7 bg-gradient-to-br from-green-400 from-10% via-indigo-500 via-30% to-red-300 to-90% my-3"
+            >
+              <CardHeader className="absolute z-10 top-1 flex-col items-start">
+                <p className="text-tiny text-white/60 uppercase font-bold">
+                  Backups
+                </p>
+                <h4 className="text-white/90 font-semibold text-xl">
+                  備份欄位
+                </h4>
+                {props.store.backups.sale ? (
+                  <Chip size="sm" color="danger" className="animate-pulse">
+                    <i className="fa-solid fa-sack-dollar"></i>&nbsp; 特價&nbsp;
+                    {props.store.backups.sale_percent * 100}%
+                  </Chip>
+                ) : null}
+              </CardHeader>
+              <div className="z-0 w-full h-full object-cover flex justify-center items-center">
+                <i className="fa-solid fa-cloud-arrow-up text-[20rem] rotate-[25deg] text-gray-700 drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"></i>
+              </div>
+              <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+                <div className="flex flex-grow gap-2 items-center">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-white/60">每購買 1 個</p>
+                    <p className="text-tiny text-green-400 font-semibold">
+                      $ {props.store.backups.price.toFixed(2)}
+                      {props.store.backups.sale ? (
+                        <p className="inline-block">
+                          &nbsp;
+                          <p className="text-red-600 inline-block">
+                            *&nbsp;
+                            {props.store.backups.sale_percent * 100}%
+                          </p>{' '}
+                          ={' '}
+                          {(
+                            props.store.backups.price *
+                            props.store.backups.sale_percent
+                          ).toFixed(2)}
+                        </p>
+                      ) : null}
+                      &nbsp;SDC
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  radius="full"
+                  size="sm"
+                  onPress={() => handleOpen('backups')}
+                  className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
+                >
+                  <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
+                </Button>
+              </CardFooter>
+            </Card>
+            <Card
+              isFooterBlurred
+              className="w-80 h-72 col-span-12 sm:col-span-7 bg-gradient-to-br from-blue-600 from-10% via-indigo-300 via-30% to-yellow-400 to-90% my-3"
+            >
+              <CardHeader className="absolute z-10 top-1 flex-col items-start">
+                <p className="text-tiny text-white/60 uppercase font-bold">
+                  Ports
+                </p>
+                <h4 className="text-white/90 font-semibold text-xl">
+                  額外端口
+                </h4>
+                {props.store.ports.sale ? (
+                  <Chip size="sm" color="danger" className="animate-pulse">
+                    <i className="fa-solid fa-sack-dollar"></i>&nbsp; 特價&nbsp;
+                    {props.store.ports.sale_percent * 100}%
+                  </Chip>
+                ) : null}
+              </CardHeader>
+              <div className="z-0 w-full h-full object-cover flex justify-center items-center">
+                <i className="fa-solid fa-network-wired text-[20rem] rotate-[25deg] text-gray-700 drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"></i>
+              </div>
+              <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+                <div className="flex flex-grow gap-2 items-center">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-white/60">每購買 1 個</p>
+                    <p className="text-tiny text-green-400 font-semibold">
+                      $ {props.store.ports.price.toFixed(2)}
+                      {props.store.ports.sale ? (
+                        <p className="inline-block">
+                          &nbsp;
+                          <p className="text-red-600 inline-block">
+                            *&nbsp;
+                            {props.store.ports.sale_percent * 100}%
+                          </p>{' '}
+                          ={' '}
+                          {(
+                            props.store.ports.price *
+                            props.store.ports.sale_percent
+                          ).toFixed(2)}
+                        </p>
+                      ) : null}
+                      &nbsp;SDC
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  radius="full"
+                  size="sm"
+                  onPress={() => handleOpen('ports')}
                   className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
                 >
                   <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
@@ -222,6 +389,58 @@ export default function Store(props: any) {
           </div>
         </div>
       </div>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          {onClose => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <p>
+                  購買
+                  {resource === 'cpu' && <p className="inline-block">處理器</p>}
+                  {resource === 'ram' && <p className="inline-block">記憶體</p>}
+                  {resource === 'disk' && (
+                    <p className="inline-block">儲存空間</p>
+                  )}
+                  {resource === 'databases' && (
+                    <p className="inline-block">資料庫</p>
+                  )}
+                  {resource === 'backups' && (
+                    <p className="inline-block">備份欄位</p>
+                  )}
+                  {resource === 'ports' && (
+                    <p className="inline-block">額外端口</p>
+                  )}
+                </p>
+              </ModalHeader>
+              <form onSubmit={handleSubmit}>
+                <ModalBody>
+                  <Input
+                    type="number"
+                    label="數量"
+                    id="quantity"
+                    placeholder="0"
+                    onChange={e => setData('quantity', Number(e.target.value))}
+                    labelPlacement="outside"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">$</span>
+                      </div>
+                    }
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    關閉
+                  </Button>
+                  <Button color="primary" type="submit">
+                    購買
+                  </Button>
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </AppLayout>
   );
 }
