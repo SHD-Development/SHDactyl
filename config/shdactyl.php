@@ -21,6 +21,65 @@ return [
         'Node-TW02' => 3,
         'Node-TW03' => 5
     ],
+    'limits' => [
+        'create_server' => [
+            'name' => [
+                'min' => 1,
+                'max' => 30,
+            ]
+        ],
+        'cpu' => [
+            'min' => 5,
+            'max' => 400,
+        ],
+        'ram' => [
+            'min' => 32,
+            'max' => 8192,
+        ],
+        'disk' => [
+            'min' => 64,
+            'max' => 20480,
+        ],
+        'databases' => [
+            'min' => 0,
+            'max' => 20,
+        ],
+        'backups' => [
+            'min' => 0,
+            'max' => 30,
+        ],
+        'ports' => [
+            'min' => 0,
+            'max' => 15,
+        ],
+    ],
+    'store' => [
+        'cpu' => [
+            'min' => 1,
+            'max' => 100,
+        ],
+        'ram' => [
+            'min' => 1,
+            'max' => 4096,
+        ],
+        'disk' => [
+            'min' => 1,
+            'max' => 8192,
+        ],
+        'databases' => [
+            'min' => 1,
+            'max' => 10,
+        ],
+        'backups' => [
+            'min' => 1,
+            'max' => 20,
+        ],
+        'ports' => [
+            'min' => 1,
+            'max' => 3,
+        ],
+    ],
+
     'store' => [
         'cpu' => [
             'price' => 10.00,

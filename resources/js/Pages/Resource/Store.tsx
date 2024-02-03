@@ -85,24 +85,24 @@ export default function Store(props: any) {
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 %</p>
-
-                    <p className="text-tiny text-green-400 font-semibold">
-                      $ {props.store.cpu.price.toFixed(2)}
-                      {props.store.cpu.sale ? (
-                        <p className="inline-block">
-                          &nbsp;
-                          <p className="text-red-600 inline-block">
-                            *&nbsp;
-                            {props.store.cpu.sale_percent * 100}%
-                          </p>{' '}
-                          ={' '}
-                          {(
-                            props.store.cpu.price * props.store.cpu.sale_percent
-                          ).toFixed(2)}
+                    {props.store.cpu.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.cpu.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.cpu.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.cpu.price.toFixed(2)}
                         </p>
-                      ) : null}
-                      &nbsp;SDC
-                    </p>
+                        &nbsp;
+                        {(
+                          props.store.cpu.price * props.store.cpu.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
                   </div>
                 </div>
                 <Button
@@ -139,12 +139,30 @@ export default function Store(props: any) {
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 MB</p>
-                    <p className="text-tiny text-green-400 font-semibold">
+                    {props.store.ram.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.ram.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.ram.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.ram.price.toFixed(2)}
+                        </p>
+                        &nbsp;
+                        {(
+                          props.store.ram.price * props.store.ram.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
+                    {/* <p className="text-tiny text-green-400 font-semibold">
                       $ {props.store.ram.price.toFixed(2)}
                       {props.store.ram.sale ? (
-                        <p className="inline-block">
+                        <p className="inline-block font-semibold">
                           &nbsp;
-                          <p className="text-red-600 inline-block">
+                          <p className="text-red-600 inline-block font-semibold">
                             *&nbsp;
                             {props.store.ram.sale_percent * 100}%
                           </p>{' '}
@@ -155,7 +173,7 @@ export default function Store(props: any) {
                         </p>
                       ) : null}
                       &nbsp;SDC
-                    </p>
+                    </p> */}
                   </div>
                 </div>
                 <Button
@@ -193,24 +211,24 @@ export default function Store(props: any) {
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 MB</p>
-                    <p className="text-tiny text-green-400 font-semibold">
-                      $ {props.store.disk.price.toFixed(2)}
-                      {props.store.disk.sale ? (
-                        <p className="inline-block">
-                          &nbsp;
-                          <p className="text-red-600 inline-block">
-                            *&nbsp;
-                            {props.store.disk.sale_percent * 100}%
-                          </p>{' '}
-                          ={' '}
-                          {(
-                            props.store.disk.price *
-                            props.store.disk.sale_percent
-                          ).toFixed(2)}
+                    {props.store.disk.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.disk.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.disk.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.disk.price.toFixed(2)}
                         </p>
-                      ) : null}
-                      &nbsp;SDC
-                    </p>
+                        &nbsp;
+                        {(
+                          props.store.disk.price * props.store.disk.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
                   </div>
                 </div>
                 <Button
@@ -246,24 +264,25 @@ export default function Store(props: any) {
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 個</p>
-                    <p className="text-tiny text-green-400 font-semibold">
-                      $ {props.store.databases.price.toFixed(2)}
-                      {props.store.databases.sale ? (
-                        <p className="inline-block">
-                          &nbsp;
-                          <p className="text-red-600 inline-block">
-                            *&nbsp;
-                            {props.store.databases.sale_percent * 100}%
-                          </p>{' '}
-                          ={' '}
-                          {(
-                            props.store.databases.price *
-                            props.store.databases.sale_percent
-                          ).toFixed(2)}
+                    {props.store.databases.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.databases.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.databases.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.databases.price.toFixed(2)}
                         </p>
-                      ) : null}
-                      &nbsp;SDC
-                    </p>
+                        &nbsp;
+                        {(
+                          props.store.databases.price *
+                          props.store.databases.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
                   </div>
                 </div>
                 <Button
@@ -301,24 +320,25 @@ export default function Store(props: any) {
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 個</p>
-                    <p className="text-tiny text-green-400 font-semibold">
-                      $ {props.store.backups.price.toFixed(2)}
-                      {props.store.backups.sale ? (
-                        <p className="inline-block">
-                          &nbsp;
-                          <p className="text-red-600 inline-block">
-                            *&nbsp;
-                            {props.store.backups.sale_percent * 100}%
-                          </p>{' '}
-                          ={' '}
-                          {(
-                            props.store.backups.price *
-                            props.store.backups.sale_percent
-                          ).toFixed(2)}
+                    {props.store.backups.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.backups.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.backups.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.backups.price.toFixed(2)}
                         </p>
-                      ) : null}
-                      &nbsp;SDC
-                    </p>
+                        &nbsp;
+                        {(
+                          props.store.backups.price *
+                          props.store.backups.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
                   </div>
                 </div>
                 <Button
@@ -356,24 +376,25 @@ export default function Store(props: any) {
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
                     <p className="text-tiny text-white/60">每購買 1 個</p>
-                    <p className="text-tiny text-green-400 font-semibold">
-                      $ {props.store.ports.price.toFixed(2)}
-                      {props.store.ports.sale ? (
-                        <p className="inline-block">
-                          &nbsp;
-                          <p className="text-red-600 inline-block">
-                            *&nbsp;
-                            {props.store.ports.sale_percent * 100}%
-                          </p>{' '}
-                          ={' '}
-                          {(
-                            props.store.ports.price *
-                            props.store.ports.sale_percent
-                          ).toFixed(2)}
+                    {props.store.ports.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.ports.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.ports.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.ports.price.toFixed(2)}
                         </p>
-                      ) : null}
-                      &nbsp;SDC
-                    </p>
+                        &nbsp;
+                        {(
+                          props.store.ports.price *
+                          props.store.ports.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
                   </div>
                 </div>
                 <Button
@@ -423,10 +444,183 @@ export default function Store(props: any) {
                     labelPlacement="outside"
                     endContent={
                       <div className="pointer-events-none flex items-center">
-                        <span className="text-default-400 text-small">$</span>
+                        <span className="text-default-400 text-small">
+                          {resource === 'cpu' && (
+                            <p className="inline-block">%</p>
+                          )}
+                          {resource === 'ram' && (
+                            <p className="inline-block">MB</p>
+                          )}
+                          {resource === 'disk' && (
+                            <p className="inline-block">MB</p>
+                          )}
+                          {resource === 'databases' && (
+                            <p className="inline-block">個</p>
+                          )}
+                          {resource === 'backups' && (
+                            <p className="inline-block">個</p>
+                          )}
+                          {resource === 'ports' && (
+                            <p className="inline-block">個</p>
+                          )}
+                        </span>
                       </div>
                     }
                   />
+                  <p className="text-green-400">
+                    $&nbsp;
+                    {resource === 'cpu' && (
+                      <p className="inline-block">
+                        {props.store.cpu.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'cpu' && props.store.cpu.sale === true && (
+                      <p className="inline-block text-red-600">
+                        *&nbsp;{props.store.cpu.sale_percent * 100}
+                        %&nbsp;
+                      </p>
+                    )}
+                    {resource === 'cpu' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.cpu.price *
+                          data.quantity *
+                          (props.store.cpu.sale
+                            ? props.store.cpu.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    {resource === 'ram' && (
+                      <p className="inline-block">
+                        {props.store.ram.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'ram' && props.store.ram.sale === true && (
+                      <p className="inline-block text-red-600">
+                        *&nbsp;{props.store.ram.sale_percent * 100}
+                        %&nbsp;
+                      </p>
+                    )}
+                    {resource === 'ram' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.ram.price *
+                          data.quantity *
+                          (props.store.ram.sale
+                            ? props.store.ram.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    {resource === 'disk' && (
+                      <p className="inline-block">
+                        {props.store.disk.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'disk' && props.store.disk.sale === true && (
+                      <p className="inline-block text-red-600">
+                        *&nbsp;{props.store.disk.sale_percent * 100}
+                        %&nbsp;
+                      </p>
+                    )}
+                    {resource === 'disk' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.disk.price *
+                          data.quantity *
+                          (props.store.disk.sale
+                            ? props.store.disk.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    {resource === 'databases' && (
+                      <p className="inline-block">
+                        {props.store.databases.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'databases' &&
+                      props.store.databases.sale === true && (
+                        <p className="inline-block text-red-600">
+                          *&nbsp;{props.store.databases.sale_percent * 100}
+                          %&nbsp;
+                        </p>
+                      )}
+                    {resource === 'databases' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.databases.price *
+                          data.quantity *
+                          (props.store.databases.sale
+                            ? props.store.databases.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    {resource === 'backups' && (
+                      <p className="inline-block">
+                        {props.store.backups.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'backups' &&
+                      props.store.backups.sale === true && (
+                        <p className="inline-block text-red-600">
+                          *&nbsp;{props.store.backups.sale_percent * 100}
+                          %&nbsp;
+                        </p>
+                      )}
+                    {resource === 'backups' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.backups.price *
+                          data.quantity *
+                          (props.store.backups.sale
+                            ? props.store.backups.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    {resource === 'ports' && (
+                      <p className="inline-block">
+                        {props.store.ports.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'ports' &&
+                      props.store.ports.sale === true && (
+                        <p className="inline-block text-red-600">
+                          *&nbsp;{props.store.ports.sale_percent * 100}
+                          %&nbsp;
+                        </p>
+                      )}
+                    {resource === 'ports' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.ports.price *
+                          data.quantity *
+                          (props.store.ports.sale
+                            ? props.store.ports.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    SDC
+                  </p>
+                  {errors.quantity && (
+                    <p className="text-red-600">{errors.quantity}</p>
+                  )}
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>

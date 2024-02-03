@@ -59,7 +59,189 @@ class DashboardController extends Controller
     }
     public function buyResource(Request $request, $resource)
     {
-        dd($resource);
+        $user = Auth::user();
+        if ($resource === 'cpu') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.cpu.min') . '|max:' . config('shdactyl.limits.store.cpu.max'),
+            ]);
+            $cpuPrice = config('shdactyl.store.cpu.price') * $data['quantity'];
+
+            if (config('shdactyl.store.cpu.sale') === true) {
+                $cpuPrice *= config('shdactyl.store.cpu.sale_percent');
+            }
+            $user->decrement('coins', $cpuPrice);
+            $user->increment('cpu', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：處理器\n購買數量：' . $data['quantity'] . ' %\n花費代幣：$ ' . number_format($cpuPrice, 2) . ' SDC\n用戶現有：' . $user->cpu . ' % 處理器',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($cpuPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' % 處理器，現在你有 ' . $user->cpu . ' % 處理器');
+        }
+        if ($resource === 'ram') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.ram.min') . '|max:' . config('shdactyl.limits.store.ram.max'),
+            ]);
+            $ramPrice = config('shdactyl.store.ram.price') * $data['quantity'];
+
+            if (config('shdactyl.store.ram.sale') === true) {
+                $ramPrice *= config('shdactyl.store.ram.sale_percent');
+            }
+            $user->decrement('coins', $ramPrice);
+            $user->increment('ram', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：記憶體\n購買數量：' . $data['quantity'] . ' MB\n花費代幣：$ ' . number_format($ramPrice, 2) . ' SDC\n用戶現有：' . $user->ram . ' MB 記憶體',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($ramPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' MB 記憶體，現在你有 ' . $user->ram . ' MB 記憶體');
+        }
+        if ($resource === 'disk') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.disk.min') . '|max:' . config('shdactyl.limits.store.disk.max'),
+            ]);
+            $diskPrice = config('shdactyl.store.disk.price') * $data['quantity'];
+
+            if (config('shdactyl.store.disk.sale') === true) {
+                $diskPrice *= config('shdactyl.store.disk.sale_percent');
+            }
+            $user->decrement('coins', $diskPrice);
+            $user->increment('disk', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：儲存空間\n購買數量：' . $data['quantity'] . ' MB\n花費代幣：$ ' . number_format($diskPrice, 2) . ' SDC\n用戶現有：' . $user->disk . ' MB 儲存空間',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($diskPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' MB 儲存空間，現在你有 ' . $user->disk . ' MB 儲存空間');
+        }
+        if ($resource === 'databases') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.databases.min') . '|max:' . config('shdactyl.limits.store.databases.max'),
+            ]);
+            $databasesPrice = config('shdactyl.store.databases.price') * $data['quantity'];
+
+            if (config('shdactyl.store.databases.sale') === true) {
+                $databasesPrice *= config('shdactyl.store.databases.sale_percent');
+            }
+            $user->decrement('coins', $databasesPrice);
+            $user->increment('databases', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：資料庫\n購買數量：' . $data['quantity'] . ' 個\n花費代幣：$ ' . number_format($databasesPrice, 2) . ' SDC\n用戶現有：' . $user->databases . ' 個 資料庫',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($databasesPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' 個 資料庫，現在你有 ' . $user->databases . ' 個 資料庫');
+        }
+        if ($resource === 'backups') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.backups.min') . '|max:' . config('shdactyl.limits.store.backups.max'),
+            ]);
+            $backupsPrice = config('shdactyl.store.backups.price') * $data['quantity'];
+
+            if (config('shdactyl.store.backups.sale') === true) {
+                $backupsPrice *= config('shdactyl.store.backups.sale_percent');
+            }
+            $user->decrement('coins', $backupsPrice);
+            $user->increment('backups', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：備份欄位\n購買數量：' . $data['quantity'] . ' 個\n花費代幣：$ ' . number_format($backupsPrice, 2) . ' SDC\n用戶現有：' . $user->backups . ' 個 備份欄位',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($backupsPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' 個 備份欄位，現在你有 ' . $user->backups . ' 個 備份欄位');
+        }
+        if ($resource === 'ports') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.ports.min') . '|max:' . config('shdactyl.limits.store.ports.max'),
+            ]);
+            $portsPrice = config('shdactyl.store.ports.price') * $data['quantity'];
+
+            if (config('shdactyl.store.ports.sale') === true) {
+                $portsPrice *= config('shdactyl.store.ports.sale_percent');
+            }
+            $user->decrement('coins', $portsPrice);
+            $user->increment('ports', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：額外端口\n購買數量：' . $data['quantity'] . ' 個\n花費代幣：$ ' . number_format($portsPrice, 2) . ' SDC\n用戶現有：' . $user->ports . ' 個 額外端口',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($portsPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' 個 額外端口，現在你有 ' . $user->ports . ' 個 額外端口');
+        }
+        return redirect('/dashboard/resource/store')->with('error', '發生錯誤');
+
     }
     public function resetPassword()
     {
@@ -87,15 +269,15 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $data = $request->validate([
-            'name' => 'required|max:30',
+            'name' => 'required|min:' . config('shdactyl.limits.create_server.name.min') . '|max:' . config('shdactyl.limits.create_server.name.max'),
             'node' => 'required|numeric|integer',
             'egg' => 'required|numeric|integer',
-            'cpu' => 'required|numeric|integer|min:5|max:400',
-            'ram' => 'required|numeric|integer|min:32|max:8192',
-            'disk' => 'required|numeric|integer|min:64|max:20480',
-            'databases' => 'required|numeric|integer|min:0|max:20',
-            'backups' => 'required|numeric|integer|min:0|max:30',
-            'ports' => 'required|numeric|integer|min:0|max:20',
+            'cpu' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.cpu.min') . '|max:' . config('shdactyl.limits.create_server.cpu.max'),
+            'ram' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.ram.min') . '|max:' . config('shdactyl.limits.create_server.ram.max'),
+            'disk' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.disk.min') . '|max:' . config('shdactyl.limits.create_server.disk.max'),
+            'databases' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.databases.min') . '|max:' . config('shdactyl.limits.create_server.databases.max'),
+            'backups' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.backups.min') . '|max:' . config('shdactyl.limits.create_server.backups.max'),
+            'ports' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.ports.min') . '|max:' . config('shdactyl.limits.create_server.ports.max'),
         ]);
         $total = SHDactyl::getUserTotalResource($user->panel_id);
         if ($total['ram'] + $data['ram'] > $user->ram) {
