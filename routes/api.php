@@ -19,26 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware('api')->group(function () {
-    // Without API Key
-
+    // Without API key
 });
-Route::middleware('irapikey')->group(function () {
-    // Internal Read
+
+Route::middleware('application_api')->group(function () {
+    Route::get('/application/users', [UserApiController::class, 'userList']);
     Route::get('/application/users/{id}', [UserApiController::class, 'userDetails']);
-});
-Route::middleware('iwapikey')->group(function () {
-    // Internal Write
-});
-Route::middleware('irwapikey')->group(function () {
-    // Internal Read & Write
-});
-Route::middleware('erapikey')->group(function () {
-    // External Read
-});
-Route::middleware('ewapikey')->group(function () {
-    // External Write
-});
-Route::middleware('erwapikey')->group(function () {
-    // External Read & Write
-
 });

@@ -84,7 +84,7 @@ export default function Store(props: any) {
               <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-white/60">每購買 1 %</p>
+                    <p className="text-tiny text-white/60">每購買 1%</p>
                     {props.store.cpu.sale === false ? (
                       <p className="text-tiny text-green-400 font-semibold">
                         $ {props.store.cpu.price.toFixed(2)} SDC
@@ -138,7 +138,7 @@ export default function Store(props: any) {
               <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-white/60">每購買 1 MB</p>
+                    <p className="text-tiny text-white/60">每購買 1 MiB</p>
                     {props.store.ram.sale === false ? (
                       <p className="text-tiny text-green-400 font-semibold">
                         $ {props.store.ram.price.toFixed(2)} SDC
@@ -210,7 +210,7 @@ export default function Store(props: any) {
               <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-white/60">每購買 1 MB</p>
+                    <p className="text-tiny text-white/60">每購買 1 MiB</p>
                     {props.store.disk.sale === false ? (
                       <p className="text-tiny text-green-400 font-semibold">
                         $ {props.store.disk.price.toFixed(2)} SDC
@@ -410,7 +410,7 @@ export default function Store(props: any) {
           </div>
         </div>
       </div>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} backdrop="blur">
         <ModalContent>
           {onClose => (
             <>
@@ -449,10 +449,10 @@ export default function Store(props: any) {
                             <p className="inline-block">%</p>
                           )}
                           {resource === 'ram' && (
-                            <p className="inline-block">MB</p>
+                            <p className="inline-block">MiB</p>
                           )}
                           {resource === 'disk' && (
-                            <p className="inline-block">MB</p>
+                            <p className="inline-block">MiB</p>
                           )}
                           {resource === 'databases' && (
                             <p className="inline-block">個</p>

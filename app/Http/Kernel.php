@@ -14,7 +14,7 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
+            // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
@@ -41,8 +41,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+                // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -66,11 +66,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'irapikey' => \App\Http\Middleware\Apikey\InternalRead::class,
-        'iwapikey' => \App\Http\Middleware\Apikey\InternalWrite::class,
-        'irwapikey' => \App\Http\Middleware\Apikey\InternalReadWrite::class,
-        'erapikey' => \App\Http\Middleware\Apikey\ExternalRead::class,
-        'ewapikey' => \App\Http\Middleware\Apikey\ExternalWrite::class,
-        'erwapikey' => \App\Http\Middleware\Apikey\ExternalReadWrite::class,
+        'application_api' => \App\Http\Middleware\Api\Application\ApiAuth::class,
     ];
 }

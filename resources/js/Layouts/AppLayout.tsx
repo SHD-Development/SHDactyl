@@ -132,6 +132,12 @@ export default function AppLayout({
                     <i className="fa-solid fa-circle-plus"></i>&nbsp; 新建伺服器
                   </NavLink>
                   <NavLink
+                    href={route('dashboard.server.manage')}
+                    active={route().current('dashboard.server.manage')}
+                  >
+                    <i className="fa-solid fa-sliders"></i>&nbsp; 管理伺服器
+                  </NavLink>
+                  <NavLink
                     href={route('dashboard.resource.store')}
                     active={route().current('dashboard.resource.store')}
                   >

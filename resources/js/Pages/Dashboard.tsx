@@ -89,7 +89,7 @@ export default function Dashboard(props: any) {
                       <p className="text-tiny uppercase font-bold">處理器</p>
                       <small className="text-default-500">CPU</small>
                       <h3 className="font-bold text-large">
-                        {props.total.cpu} / {props.auth.user.cpu} %
+                        {props.total.cpu} / {props.auth.user.cpu}%
                       </h3>
                     </div>
                   </div>
@@ -103,7 +103,7 @@ export default function Dashboard(props: any) {
                       <p className="text-tiny uppercase font-bold">記憶體</p>
                       <small className="text-default-500">Ram</small>
                       <h3 className="font-bold text-large">
-                        {props.total.ram} / {props.auth.user.ram} MB
+                        {props.total.ram} / {props.auth.user.ram} MiB
                       </h3>
                     </div>
                   </div>
@@ -117,7 +117,7 @@ export default function Dashboard(props: any) {
                       <p className="text-tiny uppercase font-bold">儲存空間</p>
                       <small className="text-default-500">Disk</small>
                       <h3 className="font-bold text-large">
-                        {props.total.disk} / {props.auth.user.disk} MB
+                        {props.total.disk} / {props.auth.user.disk} MiB
                       </h3>
                     </div>
                   </div>
@@ -282,7 +282,7 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">CPU</small>
                             <h3 className="font-bold text-large">
-                              {props.total.cpu} / {props.auth.user.cpu} %
+                              {props.total.cpu} / {props.auth.user.cpu}%
                             </h3>
                           </div>
                         </div>
@@ -298,7 +298,7 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">Ram</small>
                             <h3 className="font-bold text-large">
-                              {props.total.ram} / {props.auth.user.ram} MB
+                              {props.total.ram} / {props.auth.user.ram} MiB
                             </h3>
                           </div>
                         </div>
@@ -314,7 +314,7 @@ export default function Dashboard(props: any) {
                             </p>
                             <small className="text-default-500">Disk</small>
                             <h3 className="font-bold text-large">
-                              {props.total.disk} / {props.auth.user.disk} MB
+                              {props.total.disk} / {props.auth.user.disk} MiB
                             </h3>
                           </div>
                         </div>

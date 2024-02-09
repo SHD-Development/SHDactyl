@@ -75,7 +75,7 @@ class DashboardController extends Controller
                 [
                     'title' => '[購買資源]',
                     'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
-                        '購買資源：處理器\n購買數量：' . $data['quantity'] . ' %\n花費代幣：$ ' . number_format($cpuPrice, 2) . ' SDC\n用戶現有：' . $user->cpu . ' % 處理器',
+                        '購買資源：處理器\n購買數量：' . $data['quantity'] . '%\n花費代幣：$ ' . number_format($cpuPrice, 2) . ' SDC\n用戶現有：' . $user->cpu . '% 處理器',
                     'color' => '#03cafc',
                     'footer' => [
                         'icon_url' => config('shdactyl.webhook.icon_url'),
@@ -88,7 +88,7 @@ class DashboardController extends Controller
                     ],
                 ]
             ]);
-            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($cpuPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' % 處理器，現在你有 ' . $user->cpu . ' % 處理器');
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($cpuPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . '% 處理器，現在你有 ' . $user->cpu . '% 處理器');
         }
         if ($resource === 'ram') {
             $data = $request->validate([
@@ -105,7 +105,7 @@ class DashboardController extends Controller
                 [
                     'title' => '[購買資源]',
                     'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
-                        '購買資源：記憶體\n購買數量：' . $data['quantity'] . ' MB\n花費代幣：$ ' . number_format($ramPrice, 2) . ' SDC\n用戶現有：' . $user->ram . ' MB 記憶體',
+                        '購買資源：記憶體\n購買數量：' . $data['quantity'] . ' MiB\n花費代幣：$ ' . number_format($ramPrice, 2) . ' SDC\n用戶現有：' . $user->ram . ' MiB 記憶體',
                     'color' => '#03cafc',
                     'footer' => [
                         'icon_url' => config('shdactyl.webhook.icon_url'),
@@ -118,7 +118,7 @@ class DashboardController extends Controller
                     ],
                 ]
             ]);
-            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($ramPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' MB 記憶體，現在你有 ' . $user->ram . ' MB 記憶體');
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($ramPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' MiB 記憶體，現在你有 ' . $user->ram . ' MiB 記憶體');
         }
         if ($resource === 'disk') {
             $data = $request->validate([
@@ -135,7 +135,7 @@ class DashboardController extends Controller
                 [
                     'title' => '[購買資源]',
                     'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
-                        '購買資源：儲存空間\n購買數量：' . $data['quantity'] . ' MB\n花費代幣：$ ' . number_format($diskPrice, 2) . ' SDC\n用戶現有：' . $user->disk . ' MB 儲存空間',
+                        '購買資源：儲存空間\n購買數量：' . $data['quantity'] . ' MiB\n花費代幣：$ ' . number_format($diskPrice, 2) . ' SDC\n用戶現有：' . $user->disk . ' MiB 儲存空間',
                     'color' => '#03cafc',
                     'footer' => [
                         'icon_url' => config('shdactyl.webhook.icon_url'),
@@ -148,7 +148,7 @@ class DashboardController extends Controller
                     ],
                 ]
             ]);
-            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($diskPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' MB 儲存空間，現在你有 ' . $user->disk . ' MB 儲存空間');
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($diskPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' MiB 儲存空間，現在你有 ' . $user->disk . ' MiB 儲存空間');
         }
         if ($resource === 'databases') {
             $data = $request->validate([
@@ -336,6 +336,52 @@ class DashboardController extends Controller
             return redirect('/dashboard/server/create')->with('success', '成功創建伺服器！');
         } else {
             return redirect('/dashboard/server/create')->with('error', '創建伺服器時發生錯誤 ' . $res);
+        }
+    }
+    public function serverManagementPage()
+    {
+        $user = Auth::user();
+        $url = config('shdactyl.pterodactyl.url');
+        $auth = config('shdactyl.pterodactyl.api_key');
+        $res = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => $auth,
+        ])->get($url . '/api/application/servers?filter[owner_id]=' . $user->panel_id);
+        $data = json_decode($res, true);
+        $fee = Config::get('shdactyl.fee');
+        return Inertia::render('Server/Manage', [
+            'data' => $data['data'],
+            'fee' => $fee,
+        ]);
+    }
+    public function unsuspendServer(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|numeric|integer',
+        ]);
+        $user = Auth::user();
+        $url = config('shdactyl.pterodactyl.url');
+        $auth = config('shdactyl.pterodactyl.api_key');
+        $res = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => $auth,
+        ])->get($url . '/api/application/servers/' . $data['id']);
+        $resData = json_decode($res, true);
+        if ($resData['attributes']['user'] === $user->panel_id) {
+            $price = config('shdactyl.fee.unsuspend') * config('shdactyl.fee.node.' . $resData['attributes']['node']);
+            $user->decrement('coins', $price);
+            $user->save();
+            $res = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => $auth,
+            ])->post($url . '/api/application/servers/' . $data['id'] . '/unsuspend');
+            if ($res->successful() === true) {
+                return redirect('/dashboard/server/manage')->with('success', '成功花費 $ ' . number_format($price, 2) . ' SDC 續約伺服器');
+            } else {
+                return redirect('/dashboard/server/manage')->with('error', '續約伺服器時發生錯誤 ' . $res);
+            }
+        } else {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有權限進行此操作');
         }
     }
     public function couponPage()
