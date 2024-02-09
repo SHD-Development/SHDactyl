@@ -35,38 +35,68 @@ import { Select, SelectSection, SelectItem } from '@nextui-org/react';
 
 export default function Manage(props: any) {
   const unsuspendModal = useDisclosure();
+  const removeModal = useDisclosure();
+
   const modifyModal = useDisclosure();
 
   const [unsuspend, setUnsuspend] = React.useState({
     id: 0,
     node: 0,
   });
+  const [remove, setRemove] = React.useState({
+    id: 0,
+  });
   const [modify, setModify] = React.useState(Number);
   type UnsuspendType = {
     id: number;
     node: number;
   };
+  type RemoveType = {
+    id: number;
+  };
   const handleUnsuspendOpen = (unsuspend: UnsuspendType) => {
     setUnsuspend(unsuspend);
-    setData('id', unsuspend.id);
+    setData1('id', unsuspend.id);
     unsuspendModal.onOpen();
+  };
+  const handleRemoveOpen = (remove: RemoveType) => {
+    setRemove(remove);
+    setData2('id', remove.id);
+    removeModal.onOpen();
   };
   const handleModifyOpen = (modify: number) => {
     setModify(modify);
     modifyModal.onOpen();
   };
-  const { data, setData, post, processing, errors } = useForm({
+  const {
+    data: data1,
+    setData: setData1,
+    post: post1,
+    processing: processing1,
+    errors: errors1,
+  } = useForm({
     id: 0,
   });
-  const { data2, setData2, post2, processing2, errors2 }: any = useForm({
+
+  const {
+    data: data2,
+    setData: setData2,
+    post: post2,
+    processing: processing2,
+    errors: errors2,
+  } = useForm({
     id: 0,
   });
+
   const { errors: any } = usePage().props;
   function submitUnsuspend(e: any) {
     e.preventDefault();
-    post('/server/unsuspend');
+    post1('/server/unsuspend');
   }
-
+  function submitRemove(e: any) {
+    e.preventDefault();
+    post2('/server/delete');
+  }
   return (
     <AppLayout
       title="Manage Server"
@@ -178,7 +208,15 @@ export default function Manage(props: any) {
                           </>
                         )}
                         &nbsp;&nbsp;
-                        <Button color="danger" variant="ghost">
+                        <Button
+                          color="danger"
+                          variant="ghost"
+                          onPress={() =>
+                            handleRemoveOpen({
+                              id: item.attributes.id,
+                            })
+                          }
+                        >
                           刪除
                         </Button>
                       </div>
@@ -229,6 +267,34 @@ export default function Manage(props: any) {
                 <form onSubmit={submitUnsuspend}>
                   <Button color="primary" type="submit">
                     續約
+                  </Button>
+                </form>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={removeModal.isOpen}
+        onClose={removeModal.onClose}
+        backdrop="blur"
+      >
+        <ModalContent>
+          {onClose => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <p>刪除伺服器</p>
+              </ModalHeader>
+              <ModalBody>
+                <p>伺服器識別碼：{remove.id}</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  關閉
+                </Button>
+                <form onSubmit={submitRemove}>
+                  <Button color="danger" type="submit">
+                    刪除
                   </Button>
                 </form>
               </ModalFooter>

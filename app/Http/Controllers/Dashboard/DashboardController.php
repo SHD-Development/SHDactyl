@@ -384,6 +384,33 @@ class DashboardController extends Controller
             return redirect('/dashboard/server/manage')->with('error', '你沒有權限進行此操作');
         }
     }
+    public function deleteServer(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|numeric|integer',
+        ]);
+        $user = Auth::user();
+        $url = config('shdactyl.pterodactyl.url');
+        $auth = config('shdactyl.pterodactyl.api_key');
+        $res = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => $auth,
+        ])->get($url . '/api/application/servers/' . $data['id']);
+        $resData = json_decode($res, true);
+        if ($resData['attributes']['user'] === $user->panel_id) {
+            $res = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => $auth,
+            ])->delete($url . '/api/application/servers/' . $data['id']);
+            if ($res->successful() === true) {
+                return redirect('/dashboard/server/manage')->with('success', '成功刪除伺服器');
+            } else {
+                return redirect('/dashboard/server/manage')->with('error', '刪除伺服器時發生錯誤 ' . $res);
+            }
+        } else {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有權限進行此操作');
+        }
+    }
     public function couponPage()
     {
         return Inertia::render('Resource/Coupon');
