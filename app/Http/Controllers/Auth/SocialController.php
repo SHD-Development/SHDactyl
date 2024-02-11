@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 use Carbon\Carbon;
 use App\Models\IpRecords;
+use Illuminate\Support\Facades\Storage;
 
 class SocialController extends Controller
 {
@@ -78,7 +79,14 @@ class SocialController extends Controller
             $data = json_decode($res, true);
 
             if (count($data['data']) > 0) {
+                $old = Storage::json('old_data.json');
                 $newUser->panel_id = Arr::get($data, 'data.0.attributes.id');
+                foreach ($old['top'] as $oldUser) {
+                    if ($oldUser['id'] == Arr::get($data, 'data.0.attributes.username')) {
+                        $newUser->coins = round(($oldUser['coins'] / 3), 2);
+                        break;
+                    }
+                }
                 $res = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Authorization' => $auth,

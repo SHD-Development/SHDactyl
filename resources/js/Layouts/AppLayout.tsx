@@ -378,6 +378,12 @@ export default function AppLayout({
                 <i className="fa-solid fa-circle-plus"></i>&nbsp; 新建伺服器
               </ResponsiveNavLink>
               <ResponsiveNavLink
+                href={route('dashboard.server.manage')}
+                active={route().current('dashboard.server.manage')}
+              >
+                <i className="fa-solid fa-sliders"></i>&nbsp; 管理伺服器
+              </ResponsiveNavLink>
+              <ResponsiveNavLink
                 href={route('dashboard.resource.store')}
                 active={route().current('dashboard.resource.store')}
               >
@@ -434,6 +440,11 @@ export default function AppLayout({
                   <i className="fa-solid fa-coins"></i>
                   &nbsp;$&nbsp;{(page.props.auth.user as any).coins}
                   &nbsp;SDC
+                </ResponsiveNavLink>
+                <ResponsiveNavLink as="button">
+                  <i className="fa-solid fa-window-restore"></i>
+                  &nbsp;伺服器欄位：{(page.props.auth.user as any).servers}
+                  &nbsp;臺
                 </ResponsiveNavLink>
                 {/* <!-- Authentication --> */}
                 <form method="POST" onSubmit={logout}>
