@@ -69,6 +69,9 @@ class DashboardController extends Controller
             if (config('shdactyl.store.cpu.sale') === true) {
                 $cpuPrice *= config('shdactyl.store.cpu.sale_percent');
             }
+            if ($user->coins < $cpuPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
+            }
             $user->decrement('coins', $cpuPrice);
             $user->increment('cpu', $data['quantity']);
             DiscordAlert::to('resource')->message("", [
@@ -98,6 +101,9 @@ class DashboardController extends Controller
 
             if (config('shdactyl.store.ram.sale') === true) {
                 $ramPrice *= config('shdactyl.store.ram.sale_percent');
+            }
+            if ($user->coins < $ramPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
             }
             $user->decrement('coins', $ramPrice);
             $user->increment('ram', $data['quantity']);
@@ -129,6 +135,9 @@ class DashboardController extends Controller
             if (config('shdactyl.store.disk.sale') === true) {
                 $diskPrice *= config('shdactyl.store.disk.sale_percent');
             }
+            if ($user->coins < $diskPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
+            }
             $user->decrement('coins', $diskPrice);
             $user->increment('disk', $data['quantity']);
             DiscordAlert::to('resource')->message("", [
@@ -158,6 +167,9 @@ class DashboardController extends Controller
 
             if (config('shdactyl.store.databases.sale') === true) {
                 $databasesPrice *= config('shdactyl.store.databases.sale_percent');
+            }
+            if ($user->coins < $databasesPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
             }
             $user->decrement('coins', $databasesPrice);
             $user->increment('databases', $data['quantity']);
@@ -189,6 +201,9 @@ class DashboardController extends Controller
             if (config('shdactyl.store.backups.sale') === true) {
                 $backupsPrice *= config('shdactyl.store.backups.sale_percent');
             }
+            if ($user->coins < $backupsPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
+            }
             $user->decrement('coins', $backupsPrice);
             $user->increment('backups', $data['quantity']);
             DiscordAlert::to('resource')->message("", [
@@ -219,6 +234,9 @@ class DashboardController extends Controller
             if (config('shdactyl.store.ports.sale') === true) {
                 $portsPrice *= config('shdactyl.store.ports.sale_percent');
             }
+            if ($user->coins < $portsPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
+            }
             $user->decrement('coins', $portsPrice);
             $user->increment('ports', $data['quantity']);
             DiscordAlert::to('resource')->message("", [
@@ -239,6 +257,39 @@ class DashboardController extends Controller
                 ]
             ]);
             return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($portsPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' 個 額外端口，現在你有 ' . $user->ports . ' 個 額外端口');
+        }
+        if ($resource === 'servers') {
+            $data = $request->validate([
+                'quantity' => 'required|numeric|integer|min:' . config('shdactyl.limits.store.servers.min') . '|max:' . config('shdactyl.limits.store.servers.max'),
+            ]);
+            $serversPrice = config('shdactyl.store.servers.price') * $data['quantity'];
+
+            if (config('shdactyl.store.servers.sale') === true) {
+                $serversPrice *= config('shdactyl.store.servers.sale_percent');
+            }
+            if ($user->coins < $serversPrice) {
+                return redirect('/dashboard/resource/store')->with('error', '你沒有足夠的代幣來購買這個資源');
+            }
+            $user->decrement('coins', $serversPrice);
+            $user->increment('servers', $data['quantity']);
+            DiscordAlert::to('resource')->message("", [
+                [
+                    'title' => '[購買資源]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '購買資源：伺服器欄位\n購買數量：' . $data['quantity'] . ' 臺\n花費代幣：$ ' . number_format($serversPrice, 2) . ' SDC\n用戶現有：' . $user->servers . ' 臺 伺服器欄位',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/resource/store')->with('success', '你花費了 $ ' . number_format($serversPrice, 2) . ' SDC 成功購買了 ' . $data['quantity'] . ' 臺 伺服器欄位，現在你有 ' . $user->servers . ' 臺 伺服器欄位');
         }
         return redirect('/dashboard/resource/store')->with('error', '發生錯誤');
 
@@ -280,10 +331,10 @@ class DashboardController extends Controller
             'ports' => 'required|numeric|integer|min:' . config('shdactyl.limits.create_server.ports.min') . '|max:' . config('shdactyl.limits.create_server.ports.max'),
         ]);
         $total = SHDactyl::getUserTotalResource($user->panel_id);
-        if ($total['ram'] + $data['ram'] > $user->ram) {
+        if ($total['cpu'] + $data['cpu'] > $user->cpu) {
             return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 CPU 資源來創建這個伺服器');
         }
-        if ($total['cpu'] + $data['cpu'] > $user->cpu) {
+        if ($total['ram'] + $data['ram'] > $user->ram) {
             return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 RAM 資源來創建這個伺服器');
         }
         if ($total['disk'] + $data['disk'] > $user->disk) {
@@ -292,11 +343,14 @@ class DashboardController extends Controller
         if ($total['databases'] + $data['databases'] > $user->databases) {
             return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 Databases 資源來創建這個伺服器');
         }
+        if ($total['backups'] + $data['backups'] > $user->backups) {
+            return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 Backups 資源來創建這個伺服器');
+        }
         if ($total['ports'] + $data['ports'] > $user->ports) {
             return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 Ports 資源來創建這個伺服器');
         }
-        if ($total['backups'] + $data['backups'] > $user->backups) {
-            return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 Backups 資源來創建這個伺服器');
+        if ($total['servers'] + 1 > $user->servers) {
+            return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 Servers 資源來創建這個伺服器');
         }
         $category = $this->getCategoryById($data['egg']);
         $url = config('shdactyl.pterodactyl.url');
@@ -313,9 +367,9 @@ class DashboardController extends Controller
                     'environment' => config('shdactyl.eggs.' . $category . '.' . $data['egg'] . '.environment'),
                     'limits' => [
                         'memory' => $data['ram'],
-                        'swap' => 0,
+                        'swap' => config('shdactyl.build.swap'),
                         'disk' => $data['disk'],
-                        'io' => 500,
+                        'io' => config('shdactyl.build.io'),
                         'cpu' => $data['cpu'],
                     ],
                     'feature_limits' => [
@@ -406,6 +460,76 @@ class DashboardController extends Controller
                 return redirect('/dashboard/server/manage')->with('success', '成功刪除伺服器');
             } else {
                 return redirect('/dashboard/server/manage')->with('error', '刪除伺服器時發生錯誤 ' . $res);
+            }
+        } else {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有權限進行此操作');
+        }
+    }
+    public function modifyServer(Request $request)
+    {
+        $user = Auth::user();
+        $data = $request->validate([
+            'id' => 'required|numeric|integer',
+            'cpu' => 'required|numeric|integer|min:' . config('shdactyl.limits.modify_server.cpu.min') . '|max:' . config('shdactyl.limits.modify_server.cpu.max'),
+            'ram' => 'required|numeric|integer|min:' . config('shdactyl.limits.modify_server.ram.min') . '|max:' . config('shdactyl.limits.modify_server.ram.max'),
+            'disk' => 'required|numeric|integer|min:' . config('shdactyl.limits.modify_server.disk.min') . '|max:' . config('shdactyl.limits.modify_server.disk.max'),
+            'databases' => 'required|numeric|integer|min:' . config('shdactyl.limits.modify_server.databases.min') . '|max:' . config('shdactyl.limits.modify_server.databases.max'),
+            'backups' => 'required|numeric|integer|min:' . config('shdactyl.limits.modify_server.backups.min') . '|max:' . config('shdactyl.limits.modify_server.backups.max'),
+            'ports' => 'required|numeric|integer|min:' . config('shdactyl.limits.modify_server.ports.min') . '|max:' . config('shdactyl.limits.modify_server.ports.max'),
+        ]);
+        $url = config('shdactyl.pterodactyl.url');
+        $auth = config('shdactyl.pterodactyl.api_key');
+        $res = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => $auth,
+        ])->get($url . '/api/application/servers/' . $data['id']);
+        $resData = json_decode($res, true);
+        $total = SHDactyl::getUserTotalResource($user->panel_id);
+        if ($total['cpu'] - $resData['attributes']['limits']['cpu'] + $data['cpu'] > $user->cpu) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 CPU 資源來編輯這個伺服器');
+        }
+        if ($total['ram'] - $resData['attributes']['limits']['memory'] + $data['ram'] > $user->ram) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 RAM 資源來編輯這個伺服器');
+        }
+        if ($total['disk'] - $resData['attributes']['limits']['disk'] + $data['disk'] > $user->disk) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 Disk 資源來編輯這個伺服器');
+        }
+        if ($total['databases'] - $resData['attributes']['feature_limits']['databases'] + $data['databases'] > $user->databases) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 Databases 資源來編輯這個伺服器');
+        }
+        if ($total['backups'] - $resData['attributes']['feature_limits']['backups'] + $data['backups'] > $user->backups) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 Backups 資源來編輯這個伺服器');
+        }
+        if ($total['ports'] - $resData['attributes']['feature_limits']['allocations'] + $data['ports'] > $user->ports) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 Ports 資源來編輯這個伺服器');
+        }
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => $auth,
+        ])->get($url . '/api/application/servers/' . $data['id']);
+        $responseData = json_decode($response, true);
+        if ($responseData['attributes']['user'] === $user->panel_id) {
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => $auth,
+            ])->patch($url . '/api/application/servers/' . $data['id'] . '/build', [
+                        'allocation' => $resData['attributes']['allocation'],
+                        'memory' => $data['ram'],
+                        'swap' => config('shdactyl.build.swap'),
+                        'io' => config('shdactyl.build.io'),
+                        'cpu' => $data['cpu'],
+                        'disk' => $data['disk'],
+                        'feature_limits' => [
+                            'databases' => $data['databases'],
+                            'allocations' => $data['ports'],
+                            'backups' => $data['backups'],
+                        ],
+                    ]);
+            if ($response->successful() === true) {
+                return redirect('/dashboard/server/manage')->with('success', '成功編輯伺服器');
+            } else {
+                return redirect('/dashboard/server/manage')->with('error', '編輯伺服器時發生錯誤 ' . $response);
             }
         } else {
             return redirect('/dashboard/server/manage')->with('error', '你沒有權限進行此操作');

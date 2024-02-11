@@ -51,13 +51,16 @@ class SHDactyl
                 $totalBackups += $server['attributes']['feature_limits']['backups'];
             }
         }
+        $totalServers = count($data['data']);
+
         $total = [
             'ram' => $totalRam,
             'cpu' => $totalCPU,
             'disk' => $totalDisk,
             'databases' => $totalDatabases,
             'ports' => $totalAllocations,
-            'backups' => $totalBackups
+            'backups' => $totalBackups,
+            'servers' => $totalServers,
         ];
         return $total;
     }

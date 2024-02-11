@@ -373,6 +373,23 @@ export default function Dashboard(props: any) {
                         <i className="fa-solid fa-network-wired fa-2xl"></i>
                       </CardHeader>
                     </Card>
+                    <Card className="w-60 p-3 mt-3">
+                      <CardHeader className="justify-between">
+                        <div className="flex gap-5">
+                          <div className="flex flex-col gap-1 items-start justify-center">
+                            <p className="text-tiny uppercase font-bold">
+                              伺服器欄位
+                            </p>
+                            <small className="text-default-500">Servers</small>
+                            <h3 className="font-bold text-large">
+                              {props.total.servers} / {props.auth.user.servers}{' '}
+                              臺
+                            </h3>
+                          </div>
+                        </div>
+                        <i className="fa-solid fa-window-restore fa-2xl"></i>
+                      </CardHeader>
+                    </Card>
                   </div>
                 </ModalBody>
                 <ModalFooter>

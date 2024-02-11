@@ -293,7 +293,12 @@ export default function AppLayout({
                       &nbsp;$&nbsp;{(page.props.auth.user as any).coins}
                       &nbsp;SDC
                     </DropdownLink>
-
+                    <DropdownLink>
+                      <i className="fa-solid fa-window-restore"></i>
+                      &nbsp;伺服器欄位：
+                      {(page.props.auth.user as any).servers}
+                      &nbsp;個
+                    </DropdownLink>
                     {/*{page.props.jetstream.hasApiFeatures ? (*/}
                     {/*  <DropdownLink href={route('api-tokens.index')}>*/}
                     {/*    API Tokens*/}

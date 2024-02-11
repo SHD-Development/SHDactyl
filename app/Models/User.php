@@ -43,6 +43,7 @@ class User extends Authenticatable
         'databases',
         'backups',
         'ports',
+        'servers',
         'coins',
         'discord_id',
     ];

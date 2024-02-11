@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->integer('databases')->default(config('shdactyl.resources.databases'));
             $table->integer('backups')->default(config('shdactyl.resources.backups'));
             $table->integer('ports')->default(config('shdactyl.resources.ports'));
+            $table->integer('servers')->default(config('shdactyl.resources.servers'));
             $table->string('database_id');
         });
     }

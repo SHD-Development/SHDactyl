@@ -37,7 +37,8 @@ Route::middleware([
     Route::get('/dashboard/server/manage', [DashboardController::class, 'serverManagementPage'])->name('dashboard.server.manage');
     Route::post('/server/create', [DashboardController::class, 'serverCreation'])->name('server.create');
     Route::post('/server/unsuspend', [DashboardController::class, 'unsuspendServer'])->name('server.unsuspend');
-    Route::post('/server/delete', [DashboardController::class, 'deleteServer'])->name('server.delete');
+    Route::delete('/server/delete', [DashboardController::class, 'deleteServer'])->name('server.delete');
+    Route::patch('/server/modify', [DashboardController::class, 'modifyServer'])->name('server.modify');
     Route::get('/dashboard/resource/store', [DashboardController::class, 'resourceStorePage'])->name('dashboard.resource.store');
     Route::post('/resource/store/buy/{resource}', [DashboardController::class, 'buyResource'])->name('resource.store.buy');
     Route::get('/dashboard/resource/coupon', [DashboardController::class, 'couponPage'])->name('dashboard.resource.coupon');

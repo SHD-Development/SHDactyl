@@ -375,7 +375,7 @@ export default function Store(props: any) {
               <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-white/60">每購買 1 個</p>
+                    <p className="text-tiny text-white/60">每購買 1 臺</p>
                     {props.store.ports.sale === false ? (
                       <p className="text-tiny text-green-400 font-semibold">
                         $ {props.store.ports.price.toFixed(2)} SDC
@@ -407,6 +407,62 @@ export default function Store(props: any) {
                 </Button>
               </CardFooter>
             </Card>
+            <Card
+              isFooterBlurred
+              className="w-80 h-72 col-span-12 sm:col-span-7 bg-gradient-to-br from-orange-600 from-10% via-green-300 via-30% to-indigo-400 to-90% my-3"
+            >
+              <CardHeader className="absolute z-10 top-1 flex-col items-start">
+                <p className="text-tiny text-white/60 uppercase font-bold">
+                  Servers
+                </p>
+                <h4 className="text-white/90 font-semibold text-xl">
+                  伺服器欄位
+                </h4>
+                {props.store.servers.sale ? (
+                  <Chip size="sm" color="danger" className="animate-pulse">
+                    <i className="fa-solid fa-sack-dollar"></i>&nbsp; 特價&nbsp;
+                    {props.store.servers.sale_percent * 100}%
+                  </Chip>
+                ) : null}
+              </CardHeader>
+              <div className="z-0 w-full h-full object-cover flex justify-center items-center">
+                <i className="fa-solid fa-window-restore text-[20rem] rotate-[25deg] text-gray-700 drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"></i>
+              </div>
+              <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+                <div className="flex flex-grow gap-2 items-center">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-white/60">每購買 1 臺</p>
+                    {props.store.servers.sale === false ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $ {props.store.servers.price.toFixed(2)} SDC
+                      </p>
+                    ) : null}
+                    {props.store.servers.sale ? (
+                      <p className="text-tiny text-green-400 font-semibold">
+                        $&nbsp;
+                        <p className="inline-block font-semibold text-red-600 line-through">
+                          {props.store.servers.price.toFixed(2)}
+                        </p>
+                        &nbsp;
+                        {(
+                          props.store.servers.price *
+                          props.store.servers.sale_percent
+                        ).toFixed(2)}
+                        &nbsp;SDC
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <Button
+                  radius="full"
+                  size="sm"
+                  onPress={() => handleOpen('servers')}
+                  className="border-solid border-2 border-sky-500 hover:bg-blue-600 transition-all duration-150 ease-in-out"
+                >
+                  <i className="fa-solid fa-circle-dollar-to-slot"></i>購買
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
         </div>
       </div>
@@ -430,6 +486,9 @@ export default function Store(props: any) {
                   )}
                   {resource === 'ports' && (
                     <p className="inline-block">額外端口</p>
+                  )}
+                  {resource === 'servers' && (
+                    <p className="inline-block">伺服器欄位</p>
                   )}
                 </p>
               </ModalHeader>
@@ -462,6 +521,9 @@ export default function Store(props: any) {
                           )}
                           {resource === 'ports' && (
                             <p className="inline-block">個</p>
+                          )}
+                          {resource === 'servers' && (
+                            <p className="inline-block">臺</p>
                           )}
                         </span>
                       </div>
@@ -611,6 +673,31 @@ export default function Store(props: any) {
                           data.quantity *
                           (props.store.ports.sale
                             ? props.store.ports.sale_percent
+                            : 1)
+                        ).toFixed(2)}
+                        &nbsp;
+                      </p>
+                    )}
+                    {resource === 'servers' && (
+                      <p className="inline-block">
+                        {props.store.servers.price.toFixed(2)}&nbsp;
+                      </p>
+                    )}
+                    {resource === 'servers' &&
+                      props.store.servers.sale === true && (
+                        <p className="inline-block text-red-600">
+                          *&nbsp;{props.store.servers.sale_percent * 100}
+                          %&nbsp;
+                        </p>
+                      )}
+                    {resource === 'servers' && (
+                      <p className="inline-block">
+                        *&nbsp;{data.quantity}&nbsp;=&nbsp;
+                        {(
+                          props.store.servers.price *
+                          data.quantity *
+                          (props.store.servers.sale
+                            ? props.store.servers.sale_percent
                             : 1)
                         ).toFixed(2)}
                         &nbsp;

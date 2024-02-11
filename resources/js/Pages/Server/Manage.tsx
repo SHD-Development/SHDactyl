@@ -46,12 +46,17 @@ export default function Manage(props: any) {
   const [remove, setRemove] = React.useState({
     id: 0,
   });
-  const [modify, setModify] = React.useState(Number);
+  const [modify, setModify] = React.useState({
+    id: 0,
+  });
   type UnsuspendType = {
     id: number;
     node: number;
   };
   type RemoveType = {
+    id: number;
+  };
+  type ModifyType = {
     id: number;
   };
   const handleUnsuspendOpen = (unsuspend: UnsuspendType) => {
@@ -64,8 +69,9 @@ export default function Manage(props: any) {
     setData2('id', remove.id);
     removeModal.onOpen();
   };
-  const handleModifyOpen = (modify: number) => {
+  const handleModifyOpen = (modify: ModifyType) => {
     setModify(modify);
+    setData3('id', modify.id);
     modifyModal.onOpen();
   };
   const {
@@ -81,13 +87,27 @@ export default function Manage(props: any) {
   const {
     data: data2,
     setData: setData2,
-    post: post2,
+    delete: delete2,
     processing: processing2,
     errors: errors2,
   } = useForm({
     id: 0,
   });
-
+  const {
+    data: data3,
+    setData: setData3,
+    patch: patch3,
+    processing: processing3,
+    errors: errors3,
+  } = useForm({
+    id: 0,
+    cpu: NaN,
+    ram: NaN,
+    disk: NaN,
+    databases: NaN,
+    backups: NaN,
+    ports: NaN,
+  });
   const { errors: any } = usePage().props;
   function submitUnsuspend(e: any) {
     e.preventDefault();
@@ -95,7 +115,11 @@ export default function Manage(props: any) {
   }
   function submitRemove(e: any) {
     e.preventDefault();
-    post2('/server/delete');
+    delete2('/server/delete');
+  }
+  function submitModify(e: any) {
+    e.preventDefault();
+    patch3('/server/modify');
   }
   return (
     <AppLayout
@@ -123,10 +147,22 @@ export default function Manage(props: any) {
                     <BreadcrumbItem>Manage</BreadcrumbItem>
                   </Breadcrumbs>
                 </CardHeader>
+                {props.data.length === 0 && (
+                  <div>
+                    <Divider />
+                    <CardBody className="justify-center items-center">
+                      <p className="text-red-600 font-semibold">
+                        目前沒有伺服器
+                      </p>
+                      <Link href="/dashboard/server/create">
+                        <p className="text-gray-400 underline">創建一個？</p>
+                      </Link>
+                    </CardBody>
+                  </div>
+                )}
                 {props.data.map((item: any) => (
                   <div>
                     <Divider />
-
                     <CardBody>
                       <div className="flex flex-nowrap flex-row items-center">
                         <Chip
@@ -186,7 +222,9 @@ export default function Manage(props: any) {
                         <Button
                           color="primary"
                           variant="shadow"
-                          onPress={() => handleModifyOpen(item.attributes.id)}
+                          onPress={() =>
+                            handleModifyOpen({ id: item.attributes.id })
+                          }
                         >
                           編輯
                         </Button>
@@ -310,20 +348,129 @@ export default function Manage(props: any) {
         <ModalContent>
           {onClose => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                <p>Modify</p>
-              </ModalHeader>
-              <ModalBody>
-                <p>{modify}</p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  關閉
-                </Button>
-                <Button color="primary" type="submit">
-                  購買
-                </Button>
-              </ModalFooter>
+              <form onSubmit={submitModify}>
+                <ModalHeader className="flex flex-col gap-1">
+                  <p>編輯伺服器</p>
+                </ModalHeader>
+                <ModalBody>
+                  <p>伺服器識別碼：{modify.id}</p>
+
+                  <Input
+                    type="number"
+                    label="處理器"
+                    id="cpu"
+                    value={String(data3.cpu)}
+                    onChange={e => setData3('cpu', Number(e.target.value))}
+                    placeholder="0"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">%</span>
+                      </div>
+                    }
+                    isRequired
+                  />
+                  {errors3.cpu && (
+                    <p className="text-red-600 mx-3 mb-3">{errors3.cpu}</p>
+                  )}
+                  <Input
+                    type="number"
+                    label="記憶體"
+                    id="ram"
+                    value={String(data3.ram)}
+                    onChange={e => setData3('ram', Number(e.target.value))}
+                    placeholder="0"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">MiB</span>
+                      </div>
+                    }
+                    isRequired
+                  />
+                  {errors3.ram && (
+                    <p className="text-red-600 mx-3 mb-3">{errors3.ram}</p>
+                  )}
+                  <Input
+                    type="number"
+                    label="硬碟"
+                    id="disk"
+                    value={String(data3.disk)}
+                    onChange={e => setData3('disk', Number(e.target.value))}
+                    placeholder="0"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">MiB</span>
+                      </div>
+                    }
+                    isRequired
+                  />
+                  {errors3.disk && (
+                    <p className="text-red-600 mx-3 mb-3">{errors3.disk}</p>
+                  )}
+                  <Input
+                    type="number"
+                    label="資料庫"
+                    id="databases"
+                    value={String(data3.databases)}
+                    onChange={e =>
+                      setData3('databases', Number(e.target.value))
+                    }
+                    placeholder="0"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">個</span>
+                      </div>
+                    }
+                    isRequired
+                  />
+                  {errors3.databases && (
+                    <p className="text-red-600 mx-3 mb-3">
+                      {errors3.databases}
+                    </p>
+                  )}
+                  <Input
+                    type="number"
+                    label="備份欄位"
+                    id="backups"
+                    value={String(data3.backups)}
+                    onChange={e => setData3('backups', Number(e.target.value))}
+                    placeholder="0"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">個</span>
+                      </div>
+                    }
+                    isRequired
+                  />
+                  {errors3.backups && (
+                    <p className="text-red-600 mx-3 mb-3">{errors3.backups}</p>
+                  )}
+                  <Input
+                    type="number"
+                    label="額外端口"
+                    id="ports"
+                    value={String(data3.ports)}
+                    onChange={e => setData3('ports', Number(e.target.value))}
+                    placeholder="0"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">個</span>
+                      </div>
+                    }
+                    isRequired
+                  />
+                  {errors3.ports && (
+                    <p className="text-red-600 mx-3 mb-3">{errors3.ports}</p>
+                  )}
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    關閉
+                  </Button>
+                  <Button color="primary" type="submit">
+                    編輯
+                  </Button>
+                </ModalFooter>
+              </form>
             </>
           )}
         </ModalContent>

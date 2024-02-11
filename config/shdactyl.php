@@ -15,6 +15,7 @@ return [
         'databases' => 0,
         'backups' => 0,
         'ports' => 0,
+        'servers' => 2,
     ],
     'nodes' => [
         'Node-TW01' => 1,
@@ -39,8 +40,43 @@ return [
         ]
 
     ],
+    'build' => [
+        'swap' => 0,
+        'io' => 500,
+    ],
     'limits' => [
         'create_server' => [
+            'name' => [
+                'min' => 1,
+                'max' => 30,
+            ],
+            'cpu' => [
+                'min' => 5,
+                'max' => 400,
+            ],
+            'ram' => [
+                'min' => 32,
+                'max' => 8192,
+            ],
+            'disk' => [
+                'min' => 64,
+                'max' => 20480,
+            ],
+            'databases' => [
+                'min' => 0,
+                'max' => 20,
+            ],
+            'backups' => [
+                'min' => 0,
+                'max' => 30,
+            ],
+            'ports' => [
+                'min' => 0,
+                'max' => 15,
+            ],
+
+        ],
+        'modify_server' => [
             'name' => [
                 'min' => 1,
                 'max' => 30,
@@ -95,6 +131,10 @@ return [
                 'min' => 1,
                 'max' => 3,
             ],
+            'servers' => [
+                'min' => 1,
+                'max' => 3,
+            ],
         ],
     ],
 
@@ -127,6 +167,11 @@ return [
         ],
         'ports' => [
             'price' => 500.00,
+            'sale' => false,
+            'sale_percent' => 0.95,
+        ],
+        'servers' => [
+            'price' => 750.00,
             'sale' => false,
             'sale_percent' => 0.95,
         ],

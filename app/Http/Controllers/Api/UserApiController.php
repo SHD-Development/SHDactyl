@@ -14,9 +14,9 @@ class UserApiController extends Controller
     {
         $users = QueryBuilder::for(User::query())
             ->defaultSort('id')
-            ->allowedFilters('id', 'name', 'email', 'created_at', 'updated_at', 'panel_id', 'discord_id', 'coins', 'cpu', 'ram', 'disk', 'databases', 'backups', 'ports', 'database_id')
-            ->allowedFields('id', 'name', 'email', 'created_at', 'updated_at', 'panel_id', 'discord_id', 'coins', 'cpu', 'ram', 'disk', 'databases', 'backups', 'ports', 'database_id', 'avatar')
-            ->allowedSorts('id', 'name', 'email', 'created_at', 'updated_at', 'panel_id', 'discord_id', 'coins', 'cpu', 'ram', 'disk', 'databases', 'backups', 'ports', 'database_id')
+            ->allowedFilters('id', 'name', 'email', 'created_at', 'updated_at', 'panel_id', 'discord_id', 'coins', 'cpu', 'ram', 'disk', 'databases', 'backups', 'ports', 'servers', 'database_id')
+            ->allowedFields('id', 'name', 'email', 'created_at', 'updated_at', 'panel_id', 'discord_id', 'coins', 'cpu', 'ram', 'disk', 'databases', 'backups', 'ports', 'servers', 'database_id', 'avatar')
+            ->allowedSorts('id', 'name', 'email', 'created_at', 'updated_at', 'panel_id', 'discord_id', 'coins', 'cpu', 'ram', 'disk', 'databases', 'backups', 'ports', 'servers', 'database_id')
             ->get();
         return response($users);
     }
