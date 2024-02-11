@@ -64,4 +64,5 @@ class SHDactyl
         ];
         return $total;
     }
+
 }

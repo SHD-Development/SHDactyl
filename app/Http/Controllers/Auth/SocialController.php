@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\ProxyException;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use App\Models\User;
@@ -25,7 +26,13 @@ class SocialController extends Controller
     public function handleDiscordCallback(): RedirectResponse
     {
         $user = Socialite::driver('discord')->user();
-
+        $resProxy = Http::withHeaders([
+            'Accept' => 'application/json',
+        ])->get('http://ip-api.com/json/' . Request::ip() . '?fields=proxy');
+        $dataProxy = json_decode($resProxy, true);
+        if ($dataProxy['proxy'] == true) {
+            throw new ProxyException();
+        }
         $existingUser = User::where('discord_id', $user->id)->first();
 
         if ($existingUser) {

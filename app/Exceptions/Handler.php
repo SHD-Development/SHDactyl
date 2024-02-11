@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Exceptions\ProxyException;
+use App\Exceptions\AltException;
+use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
 {
@@ -23,6 +26,12 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        $this->renderable(function (ProxyException $e, Request $request) {
+            return response()->view('errors.proxy', [], 403);
+        });
+        $this->renderable(function (AltException $e, Request $request) {
+            return response()->view('errors.alt', [], 403);
+        });
         $this->reportable(function (Throwable $e) {
             //
         });
