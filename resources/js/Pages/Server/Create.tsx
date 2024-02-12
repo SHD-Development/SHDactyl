@@ -273,8 +273,21 @@ export default function Create(props: any) {
                   <Divider />
 
                   <CardFooter className="flex flex-col justify-center">
-                    {/*<Chip color="secondary" size="lg">您的伺服器需要在 年 月 日 續約</Chip>*/}
-                    {/*<br/>*/}
+                    <Chip color="secondary" size="lg">
+                      ${' '}
+                      {(
+                        props.fee.create *
+                        props.fee.node[data.node] *
+                        (props.fee.resource.cpu * data.cpu +
+                          props.fee.resource.ram * data.ram +
+                          props.fee.resource.disk * data.disk +
+                          props.fee.resource.databases * data.databases +
+                          props.fee.resource.backups * data.backups +
+                          props.fee.resource.ports * data.ports)
+                      ).toFixed(2)}{' '}
+                      SDC
+                    </Chip>
+                    <br />
                     <Button type="submit" color="success">
                       創建
                     </Button>

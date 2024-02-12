@@ -45,9 +45,11 @@ class DashboardController extends Controller
         $auth = config('shdactyl.pterodactyl.api_key');
         $nodes = config('shdactyl.nodes');
         $eggs = Config::get('shdactyl.eggs');
+        $fee = Config::get('shdactyl.fee');
         return Inertia::render('Server/Create', [
             'nodes' => $nodes,
-            'eggs' => $eggs
+            'eggs' => $eggs,
+            'fee' => $fee,
         ]);
     }
     public function resourceStorePage()
@@ -352,6 +354,11 @@ class DashboardController extends Controller
         if ($total['servers'] + 1 > $user->servers) {
             return redirect('/dashboard/server/create')->with('error', '你沒有那麼多 Servers 資源來創建這個伺服器');
         }
+        $price = config('shdactyl.fee.create') * config('shdactyl.fee.node.' . $data['node']) * ((config('shdactyl.fee.resource.cpu') * $data['cpu']) + (config('shdactyl.fee.resource.ram') * $data['ram']) + (config('shdactyl.fee.resource.disk') * $data['disk']) + (config('shdactyl.fee.resource.databases') * $data['databases']) + (config('shdactyl.fee.resource.backups') * $data['backups']) + (config('shdactyl.fee.resource.ports') * $data['ports']));
+        if ($user->coins < $price) {
+            return redirect('/dashboard/server/create')->with('error', '你沒有足夠的代幣來創建伺服器');
+        }
+        $user->decrement('coins', $price);
         $category = $this->getCategoryById($data['egg']);
         $url = config('shdactyl.pterodactyl.url');
         $auth = config('shdactyl.pterodactyl.api_key');
@@ -387,7 +394,26 @@ class DashboardController extends Controller
                     ],
                 ]);
         if ($res->created() === true) {
-            return redirect('/dashboard/server/create')->with('success', '成功創建伺服器！');
+
+            $serverData = json_decode($res, true);
+            DiscordAlert::to('server')->message("", [
+                [
+                    'title' => '[創建伺服器]',
+                    'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                        '伺服器識別碼：' . $serverData['attributes']['identifier'] . '\n伺服器名稱：' . $serverData['attributes']['name'] . '\n節點識別碼：' . $serverData['attributes']['node'] . '\n處理器：' . $serverData['attributes']['limits']['cpu'] . '%\n記憶體：' . $serverData['attributes']['limits']['memory'] . ' MiB\n儲存空間：' . $serverData['attributes']['limits']['disk'] . ' MiB\n資料庫：' . $serverData['attributes']['feature_limits']['databases'] . ' 個\n額外端口：' . $serverData['attributes']['feature_limits']['allocations'] . ' 個\n備份欄位：' . $serverData['attributes']['feature_limits']['backups'] . ' 個',
+                    'color' => '#03cafc',
+                    'footer' => [
+                        'icon_url' => config('shdactyl.webhook.icon_url'),
+                        'text' => 'SHDactyl',
+                    ],
+                    'timestamp' => Carbon::now(),
+                    'author' => [
+                        'name' => $user->name,
+                        'icon_url' => $user->avatar,
+                    ],
+                ]
+            ]);
+            return redirect('/dashboard/server/create')->with('success', '成功花費 $ ' . number_format($price, 2) . ' SDC 創建伺服器！');
         } else {
             return redirect('/dashboard/server/create')->with('error', '創建伺服器時發生錯誤 ' . $res);
         }
@@ -421,8 +447,14 @@ class DashboardController extends Controller
             'Authorization' => $auth,
         ])->get($url . '/api/application/servers/' . $data['id']);
         $resData = json_decode($res, true);
+        if ($resData['attributes']['suspended'] === false) {
+            return redirect('/dashboard/server/manage')->with('error', '該伺服器不需要續約');
+        }
         if ($resData['attributes']['user'] === $user->panel_id) {
             $price = config('shdactyl.fee.unsuspend') * config('shdactyl.fee.node.' . $resData['attributes']['node']);
+            if ($user->coins < $price) {
+                return redirect('/dashboard/server/manage')->with('error', '你沒有足夠的代幣來續約伺服器');
+            }
             $user->decrement('coins', $price);
             $user->save();
             $res = Http::withHeaders([
@@ -430,6 +462,25 @@ class DashboardController extends Controller
                 'Authorization' => $auth,
             ])->post($url . '/api/application/servers/' . $data['id'] . '/unsuspend');
             if ($res->successful() === true) {
+
+                $serverData = $resData;
+                DiscordAlert::to('server')->message("", [
+                    [
+                        'title' => '[續約伺服器]',
+                        'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                            '伺服器識別碼：' . $serverData['attributes']['identifier'] . '\n伺服器名稱：' . $serverData['attributes']['name'] . '\n節點識別碼：' . $serverData['attributes']['node'],
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $user->name,
+                            'icon_url' => $user->avatar,
+                        ],
+                    ]
+                ]);
                 return redirect('/dashboard/server/manage')->with('success', '成功花費 $ ' . number_format($price, 2) . ' SDC 續約伺服器');
             } else {
                 return redirect('/dashboard/server/manage')->with('error', '續約伺服器時發生錯誤 ' . $res);
@@ -457,6 +508,24 @@ class DashboardController extends Controller
                 'Authorization' => $auth,
             ])->delete($url . '/api/application/servers/' . $data['id']);
             if ($res->successful() === true) {
+                $serverData = $resData;
+                DiscordAlert::to('server')->message("", [
+                    [
+                        'title' => '[刪除伺服器]',
+                        'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                            '伺服器識別碼：' . $serverData['attributes']['identifier'] . '\n伺服器名稱：' . $serverData['attributes']['name'] . '\n節點識別碼：' . $serverData['attributes']['node'],
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $user->name,
+                            'icon_url' => $user->avatar,
+                        ],
+                    ]
+                ]);
                 return redirect('/dashboard/server/manage')->with('success', '成功刪除伺服器');
             } else {
                 return redirect('/dashboard/server/manage')->with('error', '刪除伺服器時發生錯誤 ' . $res);
@@ -527,6 +596,24 @@ class DashboardController extends Controller
                         ],
                     ]);
             if ($response->successful() === true) {
+                $serverData = $responseData;
+                DiscordAlert::to('server')->message("", [
+                    [
+                        'title' => '[編輯伺服器]',
+                        'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
+                            '伺服器識別碼：' . $serverData['attributes']['identifier'] . '\n伺服器名稱：' . $serverData['attributes']['name'] . '\n節點識別碼：' . $serverData['attributes']['node'] . '\n處理器：' . $serverData['attributes']['limits']['cpu'] . '%\n記憶體：' . $serverData['attributes']['limits']['memory'] . ' MiB\n儲存空間：' . $serverData['attributes']['limits']['disk'] . ' MiB\n資料庫：' . $serverData['attributes']['feature_limits']['databases'] . ' 個\n額外端口：' . $serverData['attributes']['feature_limits']['allocations'] . ' 個\n備份欄位：' . $serverData['attributes']['feature_limits']['backups'] . ' 個',
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $user->name,
+                            'icon_url' => $user->avatar,
+                        ],
+                    ]
+                ]);
                 return redirect('/dashboard/server/manage')->with('success', '成功編輯伺服器');
             } else {
                 return redirect('/dashboard/server/manage')->with('error', '編輯伺服器時發生錯誤 ' . $response);

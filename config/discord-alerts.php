@@ -9,6 +9,8 @@ return [
         'register' => env('WEBHOOK_REGISTER'),
         'coins' => env('WEBHOOK_COINS'),
         'resource' => env('WEBHOOK_RESOURCE'),
+        'exception' => env('WEBHOOK_EXCEPTION'),
+        'server' => env('WEBHOOK_SERVER'),
     ],
 
     /*

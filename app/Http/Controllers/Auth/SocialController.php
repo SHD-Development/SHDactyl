@@ -36,10 +36,46 @@ class SocialController extends Controller
         $bypass = Bypass::where('discord_id', $user->id)->first();
         if ($bypass) {
             if ($dataProxy['proxy'] == true && $bypass->bypass == false) {
+                DiscordAlert::to('exception')->message("", [
+                    [
+                        'title' => '[代理阻擋]',
+                        'description' => '帳號：<@' . $user->id . '> (' . $user->id . ')\n' .
+                            '電子郵件：' . $user->email .
+                            '\nIP 紀錄：' . Request::ip(),
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $user->name,
+                            'icon_url' => $user->avatar,
+                        ],
+                    ]
+                ]);
                 throw new ProxyException();
             }
         } else {
             if ($dataProxy['proxy'] == true) {
+                DiscordAlert::to('exception')->message("", [
+                    [
+                        'title' => '[代理阻擋]',
+                        'description' => '帳號：<@' . $user->id . '> (' . $user->id . ')\n' .
+                            '電子郵件：' . $user->email .
+                            '\nIP 紀錄：' . Request::ip(),
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $user->name,
+                            'icon_url' => $user->avatar,
+                        ],
+                    ]
+                ]);
                 throw new ProxyException();
             }
         }
@@ -50,6 +86,24 @@ class SocialController extends Controller
                 ->where('user_id', '!=', $existingUser->id)
                 ->first();
             if ($duplicateIps) {
+                DiscordAlert::to('exception')->message("", [
+                    [
+                        'title' => '[多帳阻擋]',
+                        'description' => '帳號：<@' . $existingUser->discord_id . '> (' . $existingUser->discord_id . ')\n' .
+                            '電子郵件：' . $existingUser->email .
+                            '\nIP 紀錄：' . Request::ip(),
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $existingUser->name,
+                            'icon_url' => $existingUser->avatar,
+                        ],
+                    ]
+                ]);
                 throw new AltException();
             }
             auth()->login($existingUser, true);
@@ -86,6 +140,24 @@ class SocialController extends Controller
         } else {
             $duplicateIps = IpRecords::where('ip', Request::ip())->first();
             if ($duplicateIps) {
+                DiscordAlert::to('exception')->message("", [
+                    [
+                        'title' => '[多帳阻擋]',
+                        'description' => '帳號：<@' . $existingUser->discord_id . '> (' . $existingUser->discord_id . ')\n' .
+                            '電子郵件：' . $existingUser->email .
+                            '\nIP 紀錄：' . Request::ip(),
+                        'color' => '#03cafc',
+                        'footer' => [
+                            'icon_url' => config('shdactyl.webhook.icon_url'),
+                            'text' => 'SHDactyl',
+                        ],
+                        'timestamp' => Carbon::now(),
+                        'author' => [
+                            'name' => $existingUser->name,
+                            'icon_url' => $existingUser->avatar,
+                        ],
+                    ]
+                ]);
                 throw new AltException();
             }
             $password = Str::random();
