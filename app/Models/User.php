@@ -46,6 +46,7 @@ class User extends Authenticatable
         'servers',
         'coins',
         'discord_id',
+        'bypass',
     ];
 
     /**

@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\Models\IpRecords;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Bypass;
 
 class SocialController extends Controller
 {
@@ -32,8 +33,15 @@ class SocialController extends Controller
             'Accept' => 'application/json',
         ])->get('http://ip-api.com/json/' . Request::ip() . '?fields=proxy');
         $dataProxy = json_decode($resProxy, true);
-        if ($dataProxy['proxy'] == true) {
-            throw new ProxyException();
+        $bypass = Bypass::where('discord_id', $user->id)->first();
+        if ($bypass) {
+            if ($dataProxy['proxy'] == true && $bypass->bypass == false) {
+                throw new ProxyException();
+            }
+        } else {
+            if ($dataProxy['proxy'] == true) {
+                throw new ProxyException();
+            }
         }
         $existingUser = User::where('discord_id', $user->id)->first();
 

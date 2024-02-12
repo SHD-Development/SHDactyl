@@ -25,4 +25,8 @@ Route::middleware('api')->group(function () {
 Route::middleware('application_api')->group(function () {
     Route::get('/application/users', [UserApiController::class, 'userList']);
     Route::get('/application/users/{id}', [UserApiController::class, 'userDetails']);
+    Route::patch('/application/users/{id}', [UserApiController::class, 'modifyUser']);
+    Route::delete('/application/users/{id}', [UserApiController::class, 'deleteUser']);
+    Route::delete('/application/users/{id}/ip', [UserApiController::class, 'clearIpRecords']);
+    Route::patch('/application/users/external/{id}/bypass', [UserApiController::class, 'toggleBypass']);
 });

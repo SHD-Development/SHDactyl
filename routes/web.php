@@ -43,9 +43,6 @@ Route::middleware([
     Route::post('/resource/store/buy/{resource}', [DashboardController::class, 'buyResource'])->name('resource.store.buy');
     Route::get('/dashboard/resource/coupon', [DashboardController::class, 'couponPage'])->name('dashboard.resource.coupon');
     Route::post('/resource/coupon/redeem', [DashboardController::class, 'redeemCoupon'])->name('resource.coupon.redeem');
-    Route::get('/test', function () {
-        return Inertia::render('Test');
-    })->name('test');
     Route::redirect('/', '/login');
     Route::post('/reset/password', [DashboardController::class, 'resetPassword'])->name('reset.password');
 });
