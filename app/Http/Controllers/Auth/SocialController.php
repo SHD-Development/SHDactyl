@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\AltException;
 use App\Exceptions\ProxyException;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
@@ -15,6 +16,7 @@ use Spatie\DiscordAlerts\Facades\DiscordAlert;
 use Carbon\Carbon;
 use App\Models\IpRecords;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class SocialController extends Controller
 {
@@ -36,6 +38,12 @@ class SocialController extends Controller
         $existingUser = User::where('discord_id', $user->id)->first();
 
         if ($existingUser) {
+            $duplicateIps = IpRecords::where('ip', Request::ip())
+                ->where('user_id', '!=', $existingUser->id)
+                ->first();
+            if ($duplicateIps) {
+                throw new AltException();
+            }
             auth()->login($existingUser, true);
             $ipRecord = IpRecords::create([
                 'user_id' => $existingUser->id,
@@ -68,6 +76,10 @@ class SocialController extends Controller
                 ]
             ]);
         } else {
+            $duplicateIps = IpRecords::where('ip', Request::ip())->first();
+            if ($duplicateIps) {
+                throw new AltException();
+            }
             $password = Str::random();
             $newUser = new User();
             $newUser->name = $user->name;
