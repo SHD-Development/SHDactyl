@@ -30,5 +30,7 @@ export default {
           },
     },
     darkMode: "class",
-    plugins: [typography, nextui()],
+    plugins: [forms({
+        strategy: 'class',
+    }), typography, nextui()],
 };

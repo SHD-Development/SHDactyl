@@ -9,6 +9,7 @@ return [
         'icon_url' => 'https://cdn.discordapp.com/attachments/1120284155578691676/1185889959710838875/shd-cloud-logo.png'
     ],
     'resources' => [
+        'coins' => 1330.00,
         'cpu' => 100,
         'ram' => 2048,
         'disk' => 4096,
@@ -21,6 +22,11 @@ return [
         'Node-TW01' => 1,
         'Node-TW02' => 3,
         'Node-TW03' => 5
+    ],
+    'log_viewer' => [
+        'can_view' => [
+            'owenliu0924useful@gmail.com',
+        ]
     ],
     'fee' => [
         'create' => 10,

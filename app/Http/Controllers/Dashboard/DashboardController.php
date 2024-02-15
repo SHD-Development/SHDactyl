@@ -415,6 +415,8 @@ class DashboardController extends Controller
             ]);
             return redirect('/dashboard/server/create')->with('success', '成功花費 $ ' . number_format($price, 2) . ' SDC 創建伺服器！');
         } else {
+            $user->increment('coins', $price);
+            $user->save();
             return redirect('/dashboard/server/create')->with('error', '創建伺服器時發生錯誤 ' . $res);
         }
     }
@@ -483,6 +485,8 @@ class DashboardController extends Controller
                 ]);
                 return redirect('/dashboard/server/manage')->with('success', '成功花費 $ ' . number_format($price, 2) . ' SDC 續約伺服器');
             } else {
+                $user->increment('coins', $price);
+                $user->save();
                 return redirect('/dashboard/server/manage')->with('error', '續約伺服器時發生錯誤 ' . $res);
             }
         } else {
@@ -572,7 +576,18 @@ class DashboardController extends Controller
         if ($total['ports'] - $resData['attributes']['feature_limits']['allocations'] + $data['ports'] > $user->ports) {
             return redirect('/dashboard/server/manage')->with('error', '你沒有那麼多 Ports 資源來編輯這個伺服器');
         }
-
+        $new_price = config('shdactyl.fee.create') * config('shdactyl.fee.node.' . $resData['attributes']['node']) * ((config('shdactyl.fee.resource.cpu') * $data['cpu']) + (config('shdactyl.fee.resource.ram') * $data['ram']) + (config('shdactyl.fee.resource.disk') * $data['disk']) + (config('shdactyl.fee.resource.databases') * $data['databases']) + (config('shdactyl.fee.resource.backups') * $data['backups']) + (config('shdactyl.fee.resource.ports') * $data['ports']));
+        $old_price = config('shdactyl.fee.create') * config('shdactyl.fee.node.' . $resData['attributes']['node']) * ((config('shdactyl.fee.resource.cpu') * $resData['attributes']['limits']['cpu']) + (config('shdactyl.fee.resource.ram') * $resData['attributes']['limits']['memory']) + (config('shdactyl.fee.resource.disk') * $resData['attributes']['limits']['disk']) + (config('shdactyl.fee.resource.databases') * $resData['attributes']['feature_limits']['databases']) + (config('shdactyl.fee.resource.backups') * $resData['attributes']['feature_limits']['backups']) + (config('shdactyl.fee.resource.ports') * $resData['attributes']['feature_limits']['allocations']));
+        if ($new_price < $old_price) {
+            $price = 0;
+        } else {
+            $price = $new_price - $old_price;
+        }
+        if ($user->coins < $price) {
+            return redirect('/dashboard/server/manage')->with('error', '你沒有足夠的代幣來編輯伺服器');
+        }
+        $user->decrement('coins', $price);
+        $user->save();
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'Authorization' => $auth,
@@ -601,7 +616,7 @@ class DashboardController extends Controller
                     [
                         'title' => '[編輯伺服器]',
                         'description' => '帳號：<@' . $user->discord_id . '> (' . $user->discord_id . ')\n' .
-                            '伺服器識別碼：' . $serverData['attributes']['identifier'] . '\n伺服器名稱：' . $serverData['attributes']['name'] . '\n節點識別碼：' . $serverData['attributes']['node'] . '\n處理器：' . $serverData['attributes']['limits']['cpu'] . '%\n記憶體：' . $serverData['attributes']['limits']['memory'] . ' MiB\n儲存空間：' . $serverData['attributes']['limits']['disk'] . ' MiB\n資料庫：' . $serverData['attributes']['feature_limits']['databases'] . ' 個\n額外端口：' . $serverData['attributes']['feature_limits']['allocations'] . ' 個\n備份欄位：' . $serverData['attributes']['feature_limits']['backups'] . ' 個',
+                            '伺服器識別碼：' . $serverData['attributes']['identifier'] . '\n伺服器名稱：' . $serverData['attributes']['name'] . '\n節點識別碼：' . $serverData['attributes']['node'] . '\n花費：$ ' . number_format($price, 2) . ' SDC\n處理器：' . $serverData['attributes']['limits']['cpu'] . '%\n記憶體：' . $serverData['attributes']['limits']['memory'] . ' MiB\n儲存空間：' . $serverData['attributes']['limits']['disk'] . ' MiB\n資料庫：' . $serverData['attributes']['feature_limits']['databases'] . ' 個\n額外端口：' . $serverData['attributes']['feature_limits']['allocations'] . ' 個\n備份欄位：' . $serverData['attributes']['feature_limits']['backups'] . ' 個',
                         'color' => '#03cafc',
                         'footer' => [
                             'icon_url' => config('shdactyl.webhook.icon_url'),
@@ -614,8 +629,10 @@ class DashboardController extends Controller
                         ],
                     ]
                 ]);
-                return redirect('/dashboard/server/manage')->with('success', '成功編輯伺服器');
+                return redirect('/dashboard/server/manage')->with('success', '成功花費 $ ' . number_format($price, 2) . ' SDC 編輯伺服器');
             } else {
+                $user->increment('coins', $price);
+                $user->save();
                 return redirect('/dashboard/server/manage')->with('error', '編輯伺服器時發生錯誤 ' . $response);
             }
         } else {
@@ -639,6 +656,11 @@ class DashboardController extends Controller
                     ->whereJsonContains('content->code', $realCoupon->code)->first();
 
                 if (!$history) {
+
+                    $user->increment('coins', $realCoupon->coins);
+                    $user->save();
+                    $realCoupon->used_times++;
+                    $realCoupon->save();
                     ActionLog::create([
                         'action_type' => 'resource.coupon.redeem',
                         'user_id' => $user->id,
@@ -664,10 +686,6 @@ class DashboardController extends Controller
                             ],
                         ]
                     ]);
-                    $user->increment('coins', $realCoupon->coins);
-                    $user->save();
-                    $realCoupon->used_times++;
-                    $realCoupon->save();
                     return redirect('/dashboard/resource/coupon')->with('success', '成功兌換名為 "' . $realCoupon->name . '" 的代碼並獲得了 $ ' . $realCoupon->coins . ' SDC');
 
                 } else {

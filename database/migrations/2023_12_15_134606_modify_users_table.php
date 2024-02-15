@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->integer('panel_id')->nullable();
             $table->string('discord_id');
             $table->string('avatar');
-            $table->decimal('coins', 10, 2)->default(0.00);
+            $table->decimal('coins', 10, 2)->default(config('shdactyl.resources.coins'));
             $table->integer('cpu')->default(config('shdactyl.resources.cpu'));
             $table->integer('ram')->default(config('shdactyl.resources.ram'));
             $table->integer('disk')->default(config('shdactyl.resources.disk'));

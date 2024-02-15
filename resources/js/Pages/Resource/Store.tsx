@@ -375,7 +375,7 @@ export default function Store(props: any) {
               <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-white/60">每購買 1 臺</p>
+                    <p className="text-tiny text-white/60">每購買 1 個</p>
                     {props.store.ports.sale === false ? (
                       <p className="text-tiny text-green-400 font-semibold">
                         $ {props.store.ports.price.toFixed(2)} SDC

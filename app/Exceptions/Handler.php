@@ -26,6 +26,9 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        $this->renderable(function (\Laravel\Socialite\Two\InvalidStateException $e, $request) {
+            return response()->view('errors.state', [], 400);
+        });
         $this->renderable(function (ProxyException $e, Request $request) {
             return response()->view('errors.proxy', [], 403);
         });

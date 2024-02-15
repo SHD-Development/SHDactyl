@@ -32,6 +32,7 @@ import { animated, useSpring } from '@react-spring/web';
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Select, SelectSection, SelectItem } from '@nextui-org/react';
+import { list } from 'postcss';
 
 export default function Manage(props: any) {
   const unsuspendModal = useDisclosure();
@@ -48,6 +49,21 @@ export default function Manage(props: any) {
   });
   const [modify, setModify] = React.useState({
     id: 0,
+    server: {
+      id: 0,
+      name: '',
+      node: 0,
+      limits: {
+        cpu: 0,
+        memory: 0,
+        disk: 0,
+      },
+      feature_limits: {
+        databases: 0,
+        backups: 0,
+        allocations: 0,
+      },
+    },
   });
   type UnsuspendType = {
     id: number;
@@ -58,6 +74,7 @@ export default function Manage(props: any) {
   };
   type ModifyType = {
     id: number;
+    server: any;
   };
   const handleUnsuspendOpen = (unsuspend: UnsuspendType) => {
     setUnsuspend(unsuspend);
@@ -223,7 +240,10 @@ export default function Manage(props: any) {
                           color="primary"
                           variant="shadow"
                           onPress={() =>
-                            handleModifyOpen({ id: item.attributes.id })
+                            handleModifyOpen({
+                              id: item.attributes.id,
+                              server: item.attributes,
+                            })
                           }
                         >
                           編輯
@@ -463,6 +483,35 @@ export default function Manage(props: any) {
                   )}
                 </ModalBody>
                 <ModalFooter>
+                  <Chip color="secondary" size="lg">
+                    ${' '}
+                    {Math.max(
+                      0,
+                      props.fee.create *
+                        modify.server.node *
+                        (props.fee.resource.cpu * data3.cpu +
+                          props.fee.resource.ram * data3.ram +
+                          props.fee.resource.disk * data3.disk +
+                          props.fee.resource.databases * data3.databases +
+                          props.fee.resource.backups * data3.backups +
+                          props.fee.resource.ports * data3.ports) -
+                        props.fee.create *
+                          modify.server.node *
+                          (props.fee.resource.cpu * modify.server.limits.cpu +
+                            props.fee.resource.ram *
+                              modify.server.limits.memory +
+                            props.fee.resource.disk *
+                              modify.server.limits.disk +
+                            props.fee.resource.databases *
+                              modify.server.feature_limits.databases +
+                            props.fee.resource.backups *
+                              modify.server.feature_limits.backups +
+                            props.fee.resource.ports *
+                              modify.server.feature_limits.allocations),
+                    )}{' '}
+                    SDC
+                  </Chip>
+                  <br />
                   <Button color="danger" variant="light" onPress={onClose}>
                     關閉
                   </Button>

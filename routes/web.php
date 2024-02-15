@@ -46,19 +46,23 @@ Route::middleware([
     Route::redirect('/', '/login');
     Route::post('/reset/password', [DashboardController::class, 'resetPassword'])->name('reset.password');
 });
-Route::get('/external/panel/{path}', function ($path) {
+Route::get('/external/panel/{path?}', function ($path = null) {
+    if ($path) {
+        $url = config('shdactyl.pterodactyl.url');
 
-    $url = config('shdactyl.pterodactyl.url');
+        $parts = explode('.', $path);
 
-    $parts = explode('.', $path);
+        $fullPath = collect($parts)->map(function ($part) {
+            return trim($part, '.');
+        })->implode('/');
 
-    $fullPath = collect($parts)->map(function ($part) {
-        return trim($part, '.');
-    })->implode('/');
+        return redirect($url . '/' . $fullPath);
+    } else {
+        $url = config('shdactyl.pterodactyl.url');
 
-    return redirect($url . '/' . $fullPath);
-
-})->name('external.panel');
+        return redirect($url);
+    }
+})->name('external.panel.param');
 Route::get('/login/discord', [SocialController::class, 'redirectToDiscord'])->name('login.discord');
 Route::get('/login/discord/callback', [SocialController::class, 'handleDiscordCallback'])->name('login.discord.callback');
 

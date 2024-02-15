@@ -12,7 +12,8 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/public/build/assets/*
+/public/build
+/public/vendor
 /public/hot
 /caddy
 frankenphp

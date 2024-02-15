@@ -44,6 +44,7 @@
     "react-spring": "^9.7.3",
     "sweetalert2": "^11.10.1",
     "sweetalert2-react-content": "^5.0.7",
+    "tailwind-variants": "^0.2.0",
     "ziggy-js": "^1.8.1"
   },
   "prettier": {

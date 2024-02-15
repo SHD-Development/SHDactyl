@@ -168,7 +168,12 @@ class SocialController extends Controller
             $newUser->password = bcrypt(request($password));
             $database_id = Str::random(16);
             $newUser->database_id = $database_id;
-            $newUser->avatar = $user->avatar;
+            if ($user->avatar != null) {
+                $newUser->avatar = $user->avatar;
+            } else {
+                $newUser->avatar = env('NO_AVATAR_ALTERNATIVE');
+            }
+
             $url = config('shdactyl.pterodactyl.url');
             $auth = config('shdactyl.pterodactyl.api_key');
             $res = Http::withHeaders([

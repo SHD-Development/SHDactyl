@@ -167,23 +167,26 @@ export default function Dashboard(props: any) {
                       User
                     </Chip>
                     &nbsp;
-                    <Chip
-                      startContent={
-                        <i className="fa-solid fa-shield-halved"></i>
-                      }
-                      variant="faded"
-                      color="secondary"
-                    >
-                      Admin
-                    </Chip>
+                    {props.data.attributes.root_admin === true && (
+                      <Chip
+                        startContent={
+                          <i className="fa-solid fa-shield-halved"></i>
+                        }
+                        variant="faded"
+                        color="secondary"
+                      >
+                        Admin
+                      </Chip>
+                    )}
                   </p>
                 </CardBody>
                 <Divider />
                 <CardBody>
-                  <div className="flex justify-around">
-                    <Button color="primary" variant="shadow">
+                  <div className="flex justify-center">
+                    {/* justify-around */}
+                    {/* <Button color="primary" variant="shadow">
                       同步資料
-                    </Button>
+                    </Button> */}
                     <Button
                       color="danger"
                       onPress={modal1.onOpen}
