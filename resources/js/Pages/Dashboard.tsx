@@ -26,7 +26,6 @@ import { router } from '@inertiajs/react';
 import Swal from 'sweetalert2';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
-
 export default function Dashboard(props: any) {
   const modal1 = useDisclosure();
   const modal2 = useDisclosure();

@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                 'info' => fn() => $request->session()->get('info'),
                 'question' => fn() => $request->session()->get('question')
             ],
+            'announcement' => config('shdactyl.announcement'),
         ]);
-    }
+    } 
 }

@@ -35,48 +35,52 @@ class SocialController extends Controller
         $dataProxy = json_decode($resProxy, true);
         $bypass = Bypass::where('discord_id', $user->id)->first();
         if ($bypass) {
-            if ($dataProxy['proxy'] == true && $bypass->bypass == false) {
-                DiscordAlert::to('exception')->message("", [
-                    [
-                        'title' => '[代理阻擋]',
-                        'description' => '帳號：<@' . $user->id . '> (' . $user->id . ')\n' .
-                            '電子郵件：' . $user->email .
-                            '\nIP 紀錄：' . Request::ip(),
-                        'color' => '#03cafc',
-                        'footer' => [
-                            'icon_url' => config('shdactyl.webhook.icon_url'),
-                            'text' => 'SHDactyl',
-                        ],
-                        'timestamp' => Carbon::now(),
-                        'author' => [
-                            'name' => $user->name,
-                            'icon_url' => $user->avatar,
-                        ],
-                    ]
-                ]);
-                throw new ProxyException();
+            if (isset($dataProxy['proxy'])) {
+                if ($dataProxy['proxy'] == true && $bypass->bypass == false) {
+                    DiscordAlert::to('exception')->message("", [
+                        [
+                            'title' => '[代理阻擋]',
+                            'description' => '帳號：<@' . $user->id . '> (' . $user->id . ')\n' .
+                                '電子郵件：' . $user->email .
+                                '\nIP 紀錄：' . Request::ip(),
+                            'color' => '#03cafc',
+                            'footer' => [
+                                'icon_url' => config('shdactyl.webhook.icon_url'),
+                                'text' => 'SHDactyl',
+                            ],
+                            'timestamp' => Carbon::now(),
+                            'author' => [
+                                'name' => $user->name,
+                                'icon_url' => $user->avatar,
+                            ],
+                        ]
+                    ]);
+                    throw new ProxyException();
+                }
             }
         } else {
-            if ($dataProxy['proxy'] == true) {
-                DiscordAlert::to('exception')->message("", [
-                    [
-                        'title' => '[代理阻擋]',
-                        'description' => '帳號：<@' . $user->id . '> (' . $user->id . ')\n' .
-                            '電子郵件：' . $user->email .
-                            '\nIP 紀錄：' . Request::ip(),
-                        'color' => '#03cafc',
-                        'footer' => [
-                            'icon_url' => config('shdactyl.webhook.icon_url'),
-                            'text' => 'SHDactyl',
-                        ],
-                        'timestamp' => Carbon::now(),
-                        'author' => [
-                            'name' => $user->name,
-                            'icon_url' => $user->avatar,
-                        ],
-                    ]
-                ]);
-                throw new ProxyException();
+            if (isset($dataProxy['proxy'])) {
+                if ($dataProxy['proxy'] == true) {
+                    DiscordAlert::to('exception')->message("", [
+                        [
+                            'title' => '[代理阻擋]',
+                            'description' => '帳號：<@' . $user->id . '> (' . $user->id . ')\n' .
+                                '電子郵件：' . $user->email .
+                                '\nIP 紀錄：' . Request::ip(),
+                            'color' => '#03cafc',
+                            'footer' => [
+                                'icon_url' => config('shdactyl.webhook.icon_url'),
+                                'text' => 'SHDactyl',
+                            ],
+                            'timestamp' => Carbon::now(),
+                            'author' => [
+                                'name' => $user->name,
+                                'icon_url' => $user->avatar,
+                            ],
+                        ]
+                    ]);
+                    throw new ProxyException();
+                }
             }
         }
         $existingUser = User::where('discord_id', $user->id)->first();

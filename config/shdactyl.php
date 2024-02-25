@@ -18,6 +18,7 @@ return [
         'ports' => 0,
         'servers' => 2,
     ],
+    'announcement' => 'hi',
     'nodes' => [
         'Node-TW01' => 1,
         'Node-TW02' => 3,

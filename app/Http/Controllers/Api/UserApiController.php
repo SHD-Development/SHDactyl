@@ -37,7 +37,7 @@ class UserApiController extends Controller
             'password' => 'min:8',
             'panel_id' => 'numeric|integer',
             'discord_id' => 'numeric|integer',
-            'coins' => 'numeric|integer',
+            'coins' => 'numeric|decimal:0,2',
             'cpu' => 'numeric|integer',
             'ram' => 'numeric|integer',
             'disk' => 'numeric|integer',
@@ -134,5 +134,127 @@ class UserApiController extends Controller
         }
         $bypass->save();
         return response($bypass);
+    }
+    public function leaderboard(Request $request)
+    {
+        if ($request->query('count') && $request->query('count') > 0) {
+            $users = User::orderBy('coins', 'desc')->limit($request->query('count'))->select('id', 'name', 'discord_id', 'coins')->get();
+        } else {
+            $users = User::orderBy('coins', 'desc')->limit(10)->select('id', 'name', 'discord_id', 'coins')->get();
+        }
+        return response($users);
+    }
+    public function externalUserDetails($id)
+    {
+        $user = User::where('discord_id', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+        return response($user);
+    }
+    public function modifyExternalUser(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'min:3|max:50',
+            'email' => 'email',
+            'password' => 'min:8',
+            'panel_id' => 'numeric|integer',
+            'discord_id' => 'numeric|integer',
+            'coins' => 'numeric|decimal:0,2',
+            'cpu' => 'numeric|integer',
+            'ram' => 'numeric|integer',
+            'disk' => 'numeric|integer',
+            'databases' => 'numeric|integer',
+            'backups' => 'numeric|integer',
+            'ports' => 'numeric|integer',
+            'servers' => 'numeric|integer',
+            'bypass' => 'boolean',
+        ]);
+        $user = User::where('discord_id', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+        if ($request->name) {
+            $user->name = $request->name;
+        }
+        if ($request->email) {
+            $user->email = $request->email;
+        }
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        if ($request->panel_id) {
+            $user->panel_id = $request->panel_id;
+        }
+        if ($request->discord_id) {
+            $user->discord_id = $request->discord_id;
+        }
+        if ($request->coins) {
+            $user->coins = $request->coins;
+        }
+        if ($request->cpu) {
+            $user->cpu = $request->cpu;
+        }
+        if ($request->ram) {
+            $user->ram = $request->ram;
+        }
+        if ($request->disk) {
+            $user->disk = $request->disk;
+        }
+        if ($request->databases) {
+            $user->databases = $request->databases;
+        }
+        if ($request->backups) {
+            $user->backups = $request->backups;
+        }
+        if ($request->ports) {
+            $user->ports = $request->ports;
+        }
+        if ($request->servers) {
+            $user->servers = $request->servers;
+        }
+        if ($request->bypass) {
+            $user->bypass = $request->bypass;
+        }
+        $user->save();
+
+        return response($user);
+    }
+    public function deleteExternalUser($id)
+    {
+        $user = User::where('discord_id', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+        ActionLog::where('user_id', $user->id)->delete();
+        IpRecords::where('user_id', $user->id)->delete();
+        $user->delete();
+        return response()->json(['message' => 'User deleted.']);
+    }
+    public function addExternalUserCoins(Request $request, $id)
+    {
+        $request->validate([
+            'coins' => 'required|numeric|decimal:0,2',
+        ]);
+        $user = User::where('discord_id', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+        $user->coins = $user->coins + $request->coins;
+        $user->save();
+        return response($user);
+    }
+    public function setExternalUserCoins(Request $request, $id)
+    {
+        $request->validate([
+            'coins' => 'required|numeric|decimal:0,2',
+        ]);
+        $user = User::where('discord_id', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+        $user->coins = $request->coins;
+        $user->save();
+        return response($user);
     }
 }

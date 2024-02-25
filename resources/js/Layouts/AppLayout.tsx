@@ -14,6 +14,7 @@ import { Team } from '@/types';
 import { ThemeSwitcher } from '@/Components/ThemeSwitcher';
 import Swal from 'sweetalert2';
 import { Tooltip } from '@nextui-org/react';
+
 interface Props {
   title: string;
   renderHeader?(): JSX.Element;
@@ -53,6 +54,7 @@ export default function AppLayout({
       warning?: string;
       info?: string;
       question?: string;
+      announcement?: string;
     };
   }
 
