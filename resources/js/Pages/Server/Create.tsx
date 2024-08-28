@@ -65,9 +65,7 @@ export default function Create(props: any) {
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex justify-around p-5 flex-row flex-wrap">
             <div
-              className="w-80
-                transition-all duration-100
-                ease-out hover:w-full"
+              className="w-full"
             >
               <Card className="w-full">
                 <form onSubmit={submit}>
