@@ -14,12 +14,12 @@ export default function AppNavbar() {
             </NavbarBrand>
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
                 <NavbarItem>
-                    <Link href="https://shdcloud.xyz/">
+                    <Link href="https://shdtw.cloud/">
                         官方網站
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Link href="https://dc.shdcloud.xyz/">
+                    <Link href="https://dc.shdtw.cloud/">
                         支援社群
                     </Link>
                 </NavbarItem>
