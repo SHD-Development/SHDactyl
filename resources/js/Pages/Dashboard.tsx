@@ -137,9 +137,9 @@ export default function Dashboard(props: any) {
                   />
                   <div className="flex flex-col">
                     <p className="text-md">帳號 / 面板資訊</p>
-                    <Link href="https://panel.shdcloud.xyz">
+                    <Link href="https://panel.shdtw.xyz">
                       <p className="text-small text-default-500">
-                        panel.shdcloud.xyz
+                        panel.shdtw.xyz
                       </p>
                     </Link>
                   </div>
@@ -200,7 +200,7 @@ export default function Dashboard(props: any) {
                   <Link
                     isExternal
                     showAnchorIcon
-                    href="https://panel.shdcloud.xyz"
+                    href="https://panel.shdtw.xyz"
                   >
                     開啟面板
                   </Link>
